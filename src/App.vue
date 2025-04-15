@@ -34,7 +34,7 @@
     grid-template-rows: 1fr 1fr 1fr;
 
     > * {
-      box-shadow: inset 0 0 0 1px var(--colorPrimary);
+      //box-shadow: inset 0 0 0 1px var(--colorPrimary);
       padding: 20px;
     }
 

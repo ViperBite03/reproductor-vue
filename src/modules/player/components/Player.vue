@@ -15,7 +15,7 @@
     padding: 25px;
 
     background-color: var(--colorPrimary);
-    border-radius: var(--radius);
+    border-radius: var(--maxRadius);
 
     display: flex;
     flex-direction: column;
@@ -26,7 +26,7 @@
 
     .cover {
       overflow: hidden;
-      border-radius: var(--radius);
+      border-radius: var(--maxRadius);
       width: 100%;
       height: 50%;
     }

@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+  import Song from '@/modules/shared/components/Song.vue';
+</script>
 
 <style lang="scss">
   #queue {
@@ -10,9 +12,7 @@
     <h2 class="g-title">QUEUE</h2>
 
     <div class="queue-list" v-for="n in 3" :key="n">
-      <div class="cover"></div>
-      <div class="title"></div>
-      <div class="artist"></div>
+      <Song> </Song>
     </div>
   </div>
 </template>
