@@ -1,0 +1,94 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-family: var(--fontSecondary), sans-serif;
+  color: var(--colorText);
+}
+
+b {
+  font-weight: bold;
+  font-family: inherit;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+span,
+p {
+  margin: 0;
+  font-family: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  outline: 0;
+  text-decoration: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: unset;
+  font-family: var(--fontPrimary), sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--colorNeutral);
+  margin: 0;
+}
+
+button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+hr {
+  border: 0;
+  border-bottom: 1px solid var(--colorBorder);
+  margin: 25px 0;
+}
+
+svg.withStroke {
+  stroke: var(--colorText);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff00;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c9c9c9;
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #adadad;
+}

@@ -1,0 +1,5 @@
+
+import type { SvgStore } from '@/modules/shared/interfaces/ISvgStore'
+export const svgStore: SvgStore = {"Back":"<svg  width=\"128\" height=\"128\" viewBox=\"0 0 24 24\"><path stroke=\"#333333\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20 5v14L8 12zM4 5v14\"/></svg>","Forward":"<svg  width=\"128\" height=\"128\" viewBox=\"0 0 24 24\"><path stroke=\"#333333\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M4 5v14l12-7zm16 0v14\"/></svg>","PauseFilled":"<svg  width=\"128\" height=\"128\" viewBox=\"0 0 24 24\"><path d=\"M9 4H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m8 0h-2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2\"/></svg>","PlayFilled":"<svg  width=\"128\" height=\"128\" viewBox=\"0 0 24 24\"><path d=\"M6 4v16a1 1 0 0 0 1.524.852l13-8a1 1 0 0 0 0-1.704l-13-8A1 1 0 0 0 6 4\"/></svg>"}
+
+export const svgList = Object.keys(svgStore)

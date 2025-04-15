@@ -1,0 +1,13 @@
+@use 'defaults.scss';
+@use 'variables.scss';
+@use 'mixins.scss' as *;
+
+.g-box {
+}
+
+.g-title {
+  font-weight: bold;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  font-size: 30px;
+}
