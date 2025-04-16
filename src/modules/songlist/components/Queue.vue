@@ -1,5 +1,5 @@
 <script setup>
-  import Song from '@/modules/shared/components/Song.vue';
+  import Song from '@/modules/songlist/components/Song.vue';
 </script>
 
 <style lang="scss">
