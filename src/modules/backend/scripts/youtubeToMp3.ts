@@ -3,6 +3,7 @@ import path from 'path'
 import id3 from 'node-id3'
 import { pipeline } from 'stream'
 import { promisify } from 'util'
+import type { IScrapData } from '@/modules/backend/interfaces/IScrapData'
 
 const streamPipeline = promisify(pipeline)
 
@@ -20,17 +21,32 @@ const downloadFile = async (url: string, fileName: string) => {
   await streamPipeline(response.body, fs.createWriteStream(filePath))
 }
 
-export const downloadSong = async (youtubeUrl: string): Promise<string> => {
+export const scrapSong = async (youtubeUrl: string): Promise<IScrapData> => {
   const { ytmp3 } = await import('@vreden/youtube_scraper')
 
-  let songData = ''
+  let songData: IScrapData = {
+    youtubeURL: '',
+    youtubeTitle: '',
+    miniatura: '',
+    views: '',
+    age: '',
+    author: '',
+    authorChannel: '',
+    error: '',
+  }
 
   try {
     const result = await ytmp3(youtubeUrl)
-    const songName = result.metadata.title
 
-    await downloadFile(result.download.url, songName)
+    songData.youtubeURL = result.metadata.url
+    songData.youtubeTitle = result.metadata.title
+    songData.miniatura = result.metadata.image
+    songData.views = result.metadata.views
+    songData.age = result.metadata.ago
+    songData.author = result.metadata.author.name
+    songData.authorChannel = result.metadata.url
   } catch (err) {
+    songData.error = err
     console.error(youtubeUrl, err)
   }
 

@@ -1,15 +1,17 @@
-<script setup>
+<script lang="ts" setup>
   import { onMounted, ref } from 'vue'
+  import { cleanYouTubeTitle } from '@/modules/settings/scripts/cleanTitle'
   import { Howl } from 'howler'
+  import { IScrapData } from '@/modules/backend/interfaces/IScrapData'
 
   const youtubeURL = ref('')
   const songName = ref('')
 
   const downloadSong = async () => {
-    const result = await window.electron.ipcRenderer.invoke(
-      'download-song',
-      youtubeURL.value
-    )
+    console.log(youtubeURL.value)
+    const result: IScrapData = await window.electron.ipcRenderer.invoke('scrap-song', youtubeURL.value)
+
+    console.log(cleanYouTubeTitle(result.youtubeTitle))
   }
 
   const play = async () => {
