@@ -7,18 +7,24 @@
 
 .g-title {
   font-weight: bold;
-  padding-top: 20px;
   padding-bottom: 10px;
   font-size: 30px;
 }
 
-.g-shadow::after {
-  background: inherit;
-  position: absolute;
-  content: '';
-  filter: blur(10px) saturate(3);
-  width: 100%;
-  height: 100%;
-  scale: 0.8;
-  z-index: -1;
+.g-shadow {
+  position: relative;
+  background-position: center;
+  background-size: cover;
+
+  &::after {
+    background: inherit;
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+
+    transform: scale(var(--scale, 0.8));
+    filter: blur(var(--blur, 10px)) saturate(3);
+  }
 }
