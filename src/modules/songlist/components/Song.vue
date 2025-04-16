@@ -1,8 +1,8 @@
 <script setup>
-  import { ref } from 'vue';
+  import { ref } from 'vue'
 
-  let title = ref('title');
-  let artist = ref('artist');
+  let title = ref('title')
+  let artist = ref('artist')
 </script>
 
 <style lang="scss" scoped>
@@ -13,10 +13,8 @@
     margin: 10px 0;
 
     .cover {
-      position: relative;
       background-image: url('https://i1.sndcdn.com/artworks-4wL83CnbFTZa-0-t500x500.png');
-      background-position: center;
-      background-size: cover;
+
       height: 50px;
       width: 50px;
       border-radius: var(--maxRadius);

@@ -1,24 +1,24 @@
 <script setup>
-  import { ref } from 'vue';
-  import gsap from 'gsap';
+  import { ref } from 'vue'
+  import gsap from 'gsap'
 
-  import Songlist from '@/modules/songlist/components/Songlist.vue';
-  import Player from '@/modules/player/components/Player.vue';
-  import Settings from '@/modules/settings/components/Settings.vue';
-  import Playlist from '@/modules/playlist/components/Playlist.vue';
-  import Queue from '@/modules/songlist/components/Queue.vue';
+  import Songlist from '@/modules/songlist/components/Songlist.vue'
+  import Player from '@/modules/player/components/Player.vue'
+  import Settings from '@/modules/settings/components/Settings.vue'
+  import Playlist from '@/modules/playlist/components/Playlist.vue'
+  import Queue from '@/modules/songlist/components/Queue.vue'
 
-  const expanded = ref(true);
+  const expanded = ref(true)
 
   const toggle = () => {
     gsap.to('#grid-container', {
       duration: 2,
       ease: 'elastic.inOut',
       '--col1': expanded.value ? '3fr' : '1fr',
-    });
+    })
 
-    expanded.value = !expanded.value;
-  };
+    expanded.value = !expanded.value
+  }
 </script>
 
 <style lang="scss">
@@ -31,10 +31,10 @@
     display: grid;
 
     grid-template-columns: var(--col1) 2fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 250px 1fr 1fr 1fr;
 
     > * {
-      //box-shadow: inset 0 0 0 1px var(--colorPrimary);
+      box-shadow: inset 0 0 0 1px var(--colorPrimary);
       padding: 20px;
     }
 
@@ -46,7 +46,8 @@
       grid-row: span 3;
     }
 
-    .player-container {
+    .player-container,
+    .queue-container {
       grid-row: span 2;
     }
   }
