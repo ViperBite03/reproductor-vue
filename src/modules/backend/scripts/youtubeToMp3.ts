@@ -1,4 +1,3 @@
-import { ytmp3 } from '@vreden/youtube_scraper'
 import fs from 'fs'
 import path from 'path'
 import id3 from 'node-id3'
@@ -22,6 +21,8 @@ const downloadFile = async (url: string, fileName: string) => {
 }
 
 export const downloadSong = async (youtubeUrl: string): Promise<string> => {
+  const { ytmp3 } = await import('@vreden/youtube_scraper')
+
   let songData = ''
 
   try {
