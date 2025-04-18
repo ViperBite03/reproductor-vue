@@ -1,32 +1,58 @@
 <script lang="ts" setup>
-  import { ref } from 'vue'
+  import { Ref, ref } from 'vue'
   import { cleanYouTubeTitle } from '@/modules/settings/scripts/cleanTitle'
   import { Howl } from 'howler'
-  import { IScrapData } from '@/modules/backend/interfaces/IScrapData'
+  import type { IScrapData } from '@/modules/backend/interfaces/IScrapData'
+  import type { ISongMetadata } from '@/modules/backend/interfaces/ISongMetadata'
+  import type { ITag } from '@/modules/player/interfaces/ITag'
 
   const youtubeURL = ref('')
   const songName = ref('test')
 
-  const songTitle = ref('')
-  const songAuthor = ref('')
-  const googleImages = ref([])
-  const googleImageSelected = ref('')
+  const songTitle: Ref<string> = ref('')
+  const songArtist: Ref<string> = ref('')
+  const songVideoclip: Ref<string> = ref('')
+  const songTags: Ref<string[]> = ref([])
 
-  const downloadSong = async () => {
-    const scrapResult: IScrapData = await window.electron.ipcRenderer.invoke('scrap-song', youtubeURL.value)
+  const googleImages: Ref<string[]> = ref([])
+  const googleImageSelected: Ref<string> = ref('')
 
-    const { title, author } = cleanYouTubeTitle(scrapResult.youtubeTitle, scrapResult.author)
+  let scrapResult: IScrapData
+
+  const getMetadataFromYT = async () => {
+    scrapResult = await window.electron.ipcRenderer.invoke('scrap-song', youtubeURL.value)
+
+    const { title, artist } = cleanYouTubeTitle(scrapResult.youtubeTitle, scrapResult.artist)
 
     songTitle.value = title
-    songAuthor.value = author
+    songArtist.value = artist
+    songVideoclip.value = scrapResult.youtubeURL
 
-    const googleSearch = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(`${author}+${title}`)}&searchType=image&key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_GOOGLE_CX}`
-
+    const googleSearch = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(`${artist}+${title}`)}&searchType=image&key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_GOOGLE_CX}`
     const imagesResult = await (await fetch(googleSearch)).json()
 
-    googleImages.value = imagesResult.items.map((x) => x.link)
+    googleImages.value = imagesResult.items.map((img) => img.link)
+  }
 
-    console.log(googleImages.value)
+  const saveSongAndMetadata = async () => {
+    const fileName = `${songArtist.value} - ${songTitle.value}`
+    console.log(scrapResult)
+    await window.electron.ipcRenderer.invoke('download-file', scrapResult.downloadURL, fileName)
+
+    const metadata: ISongMetadata = {
+      title: songTitle.value,
+      artist: songArtist.value,
+      date: new Date().toISOString(),
+      extraData: {
+        tags: [...songTags.value],
+        cover: googleImageSelected.value,
+      },
+    }
+
+    await window.electron.ipcRenderer.invoke('write-metadata', metadata, fileName)
+    const readTest = await window.electron.ipcRenderer.invoke('read-metadata', fileName)
+
+    console.log('READ TEST:', readTest)
   }
 
   const selectImage = (newUrl: string) => {
@@ -39,7 +65,7 @@
 
     const howl = new Howl({
       src: [path + songName.value + '.mp3'],
-      rate: 1.2,
+      rate: 0.8,
       volume: 0.5,
       onplay: () => {
         console.log('Playing...')
@@ -58,8 +84,8 @@
     .section {
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      padding-bottom: 50px;
+      gap: 10px;
+      padding-bottom: 20px;
       padding-top: 10px;
     }
 
@@ -91,14 +117,12 @@
     <h3>FASE 1: Descargar canción</h3>
     <div class="section">
       <input type="text" v-model="youtubeURL" placeholder="youtube url" />
+      <button @click="getMetadataFromYT">Obtener metadatos</button>
 
       <input type="text" v-model="songTitle" placeholder="Título" />
-      <input type="text" v-model="songAuthor" placeholder="Artista" />
-
-      <button @click="downloadSong">Descargar cancion</button>
+      <input type="text" v-model="songArtist" placeholder="Artista" />
+      <input type="text" v-model="songVideoclip" placeholder="Videoclip URL (opcional)" />
     </div>
-
-    <h3>FASE 2: Elegir imagen</h3>
 
     <div class="section">
       <div class="google-images">
@@ -114,8 +138,7 @@
       <input type="text" v-model="googleImageSelected" placeholder="Image url" />
     </div>
 
-    <h3>FASE 3: Elegir tags</h3>
-    <div class="section">Proximamente...</div>
+    <button @click="saveSongAndMetadata">Descargar canción</button>
 
     <button @click="play">Play song test</button>
   </div>

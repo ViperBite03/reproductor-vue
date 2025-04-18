@@ -4,7 +4,8 @@ export type IScrapData = {
   miniatura: string
   views: string
   age: string
-  author: string
-  authorChannel: string
+  artist: string
+  artistChannel: string
   error: string
+  downloadURL: string
 }

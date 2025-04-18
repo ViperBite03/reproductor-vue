@@ -1,4 +1,4 @@
-export const cleanYouTubeTitle = (input: string, authorChannel: string = '') => {
+export const cleanYouTubeTitle = (input: string, authorChannel: string = ''): { title: string; artist: string } => {
   let clean = input
     .replace(/\(.*?\)/g, '') // elimina paréntesis
     .replace(/\[.*?\]/g, '') // elimina corchetes
@@ -19,12 +19,12 @@ export const cleanYouTubeTitle = (input: string, authorChannel: string = '') => 
     const title = rest.join(separator).trim()
     return {
       title: title,
-      author: author.trim(),
+      artist: author.trim(),
     }
   }
 
   return {
     title: clean.trim(),
-    author: authorChannel,
+    artist: authorChannel,
   }
 }

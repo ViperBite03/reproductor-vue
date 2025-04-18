@@ -4,20 +4,22 @@ import id3 from 'node-id3'
 import { pipeline } from 'stream'
 import { promisify } from 'util'
 import type { IScrapData } from '@/modules/backend/interfaces/IScrapData'
+import type { ISongMetadata } from '@/modules/backend/interfaces/ISongMetadata'
 
 const streamPipeline = promisify(pipeline)
 
-const downloadFile = async (url: string, fileName: string) => {
+export const downloadFile = async (url: string, fileName: string): Promise<string> => {
   const musicFolderPath = path.join(process.cwd(), 'music')
 
   if (!fs.existsSync(musicFolderPath)) {
     fs.mkdirSync(musicFolderPath, { recursive: true })
   }
-
   const filePath = path.join(musicFolderPath, fileName + '.mp3')
   const response = await fetch(url)
 
   await streamPipeline(response.body, fs.createWriteStream(filePath))
+
+  return fileName + '.mp3'
 }
 
 export const scrapSong = async (youtubeUrl: string): Promise<IScrapData> => {
@@ -29,9 +31,10 @@ export const scrapSong = async (youtubeUrl: string): Promise<IScrapData> => {
     miniatura: '',
     views: '',
     age: '',
-    author: '',
-    authorChannel: '',
+    artist: '',
+    artistChannel: '',
     error: '',
+    downloadURL: '',
   }
 
   try {
@@ -42,10 +45,9 @@ export const scrapSong = async (youtubeUrl: string): Promise<IScrapData> => {
     songData.miniatura = result.metadata.image
     songData.views = result.metadata.views
     songData.age = result.metadata.ago
-    songData.author = result.metadata.author.name
-    songData.authorChannel = result.metadata.url
-
-    downloadFile(result.download.url, 'test')
+    songData.artist = result.metadata.author.name
+    songData.artistChannel = result.metadata.url
+    songData.downloadURL = result.download.url
   } catch (err) {
     songData.error = err
     console.error(youtubeUrl, err)
@@ -54,21 +56,36 @@ export const scrapSong = async (youtubeUrl: string): Promise<IScrapData> => {
   return songData
 }
 
-/* OLD */
-
-export const writeMetaData = async ({ fileName, metaData }) => {
+export const writeMetaData = async (metadata: ISongMetadata, fileName: string) => {
   const path = await process.cwd()
   const mp3 = fileName.includes('.mp3') ? '' : '.mp3'
   const filePath = `${path}/music/${fileName}${mp3}`
 
-  id3.update(metaData, filePath)
+  const parsedMetadata = {
+    title: metadata.title,
+    artist: metadata.artist,
+    date: new Date(metadata.date).toDateString(),
+    genre: JSON.stringify(metadata.extraData),
+  }
+
+  id3.update(parsedMetadata, filePath)
 }
 
-export const readMetaData = async (fileName: string) => {
+export const readMetaData = async (fileName: string): Promise<ISongMetadata> => {
   const path = await process.cwd()
-  const filePath = `${path}/music/${fileName}`
+  const mp3 = fileName.includes('.mp3') ? '' : '.mp3'
+  const filePath = `${path}/music/${fileName}${mp3}`
 
-  return id3.Promise.read(filePath)
+  const result = await id3.Promise.read(filePath)
+
+  const metadata: ISongMetadata = {
+    title: result.title,
+    artist: result.artist,
+    date: new Date(result.date).toDateString(),
+    extraData: JSON.parse(result.genre),
+  }
+
+  return metadata
 }
 
 export const getSongFileNames = async () => {

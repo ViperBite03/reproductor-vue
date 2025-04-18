@@ -3,7 +3,13 @@ import path from 'node:path'
 import started from 'electron-squirrel-startup'
 
 import type { IScrapData } from '@/modules/backend/interfaces/IScrapData'
-import { scrapSong, writeMetaData, readMetaData, getSongFileNames } from '@/modules/backend/scripts/youtubeToMp3'
+import {
+  scrapSong,
+  downloadFile,
+  writeMetaData,
+  readMetaData,
+  getSongFileNames,
+} from '@/modules/backend/scripts/youtubeToMp3'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -62,9 +68,9 @@ app.on('window-all-closed', () => {
 // code. You can also put them in separate files and import them here.
 
 ipcMain.handle('scrap-song', async (_, youtubeUrl): Promise<IScrapData> => scrapSong(youtubeUrl))
-ipcMain.handle('download-file', async (_, youtubeUrl) => scrapSong(youtubeUrl))
-ipcMain.handle('write-meta-data', async (_, args) => writeMetaData(args))
-ipcMain.handle('read-meta-data', async (_, fileName) => readMetaData(fileName))
+ipcMain.handle('download-file', async (_, youtubeUrl, fileName) => downloadFile(youtubeUrl, fileName))
+ipcMain.handle('write-metadata', async (_, metadata, fileName) => writeMetaData(metadata, fileName))
+ipcMain.handle('read-metadata', async (_, fileName) => readMetaData(fileName))
 ipcMain.handle('get-song-file-names', getSongFileNames)
 
 ipcMain.handle('get-path', async () => {
