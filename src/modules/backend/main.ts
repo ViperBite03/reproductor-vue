@@ -13,8 +13,9 @@ if (started) {
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1250,
-    height: 750,
+    width: 1300,
+    height: 800,
+    // icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -61,6 +62,7 @@ app.on('window-all-closed', () => {
 // code. You can also put them in separate files and import them here.
 
 ipcMain.handle('scrap-song', async (_, youtubeUrl): Promise<IScrapData> => scrapSong(youtubeUrl))
+ipcMain.handle('download-file', async (_, youtubeUrl) => scrapSong(youtubeUrl))
 ipcMain.handle('write-meta-data', async (_, args) => writeMetaData(args))
 ipcMain.handle('read-meta-data', async (_, fileName) => readMetaData(fileName))
 ipcMain.handle('get-song-file-names', getSongFileNames)

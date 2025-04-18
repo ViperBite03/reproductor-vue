@@ -1,4 +1,4 @@
-export const cleanYouTubeTitle = (input: string) => {
+export const cleanYouTubeTitle = (input: string, authorChannel: string = '') => {
   let clean = input
     .replace(/\(.*?\)/g, '') // elimina paréntesis
     .replace(/\[.*?\]/g, '') // elimina corchetes
@@ -9,10 +9,7 @@ export const cleanYouTubeTitle = (input: string) => {
     .replace(/[<>:"/\\|?*]/g, '') // caracteres ilegales
     .replace(/\s{2,}/g, ' ') // espacios dobles
     .replace(/\.+$/, '') // puntos al final
-    .replace(
-      /(?:Subtitulad[oa]s?|Sub\.? Español|Lyrics?|Lyric Video|AMV)/gi,
-      ''
-    ) // limpia términos comunes
+    .replace(/(?:Subtitulad[oa]s?|Sub\.? Español|Lyrics?|Lyric Video|AMV)/gi, '') // limpia términos comunes
     .replace(/\s{2,}/g, ' ') // espacios múltiples
     .trim()
 
@@ -21,13 +18,13 @@ export const cleanYouTubeTitle = (input: string) => {
     const [author, ...rest] = clean.split(separator)
     const title = rest.join(separator).trim()
     return {
-      author: author.trim(),
       title: title,
+      author: author.trim(),
     }
   }
 
   return {
-    author: '',
     title: clean.trim(),
+    author: authorChannel,
   }
 }

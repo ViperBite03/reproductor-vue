@@ -11,13 +11,13 @@
   const expanded = ref(true)
 
   const toggle = () => {
-    gsap.to('#grid-container', {
+    /* gsap.to('#grid-container', {
       duration: 2,
       ease: 'elastic.inOut',
       '--col1': expanded.value ? '3fr' : '1fr',
     })
 
-    expanded.value = !expanded.value
+    expanded.value = !expanded.value*/
   }
 </script>
 

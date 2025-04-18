@@ -15,7 +15,6 @@ const downloadFile = async (url: string, fileName: string) => {
   }
 
   const filePath = path.join(musicFolderPath, fileName + '.mp3')
-
   const response = await fetch(url)
 
   await streamPipeline(response.body, fs.createWriteStream(filePath))
@@ -45,6 +44,8 @@ export const scrapSong = async (youtubeUrl: string): Promise<IScrapData> => {
     songData.age = result.metadata.ago
     songData.author = result.metadata.author.name
     songData.authorChannel = result.metadata.url
+
+    downloadFile(result.download.url, 'test')
   } catch (err) {
     songData.error = err
     console.error(youtubeUrl, err)

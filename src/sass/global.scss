@@ -2,7 +2,28 @@
 @use 'variables.scss';
 @use 'mixins.scss' as *;
 
-.g-box {
+button {
+  transition: 0.3s ease;
+  border: 1px solid var(--colorSecondary);
+  border-radius: var(--radius);
+  padding: 10px 20px;
+
+  &:hover {
+    transform: scale(0.9);
+  }
+}
+
+input {
+  transition: 0.3s ease;
+  border: 1px solid var(--colorPrimary);
+  padding: 10px;
+  border-radius: var(--radius);
+  background-color: transparent;
+  outline: none;
+
+  &:focus {
+    border: 1px solid var(--colorSecondary);
+  }
 }
 
 .g-title {
