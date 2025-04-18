@@ -1,12 +1,12 @@
 <script setup>
-  import { ref } from 'vue';
-  import Svg from '@/modules/shared/components/Svg.vue';
+  import { ref } from 'vue'
+  import Svg from '@/modules/shared/components/Svg.vue'
 
-  let playPause = ref(true);
+  let playPause = ref(true)
 
   const togglePlay = () => {
-    playPause.value = !playPause.value;
-  };
+    playPause.value = !playPause.value
+  }
 </script>
 
 <style lang="scss">
@@ -29,6 +29,10 @@
       border-radius: var(--maxRadius);
       width: 100%;
       height: 50%;
+      background-image: url('https://upload.wikimedia.org/wikipedia/en/0/02/Sabrina_Carpenter_-_Taste.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
     }
 
     .details {
@@ -87,12 +91,7 @@
 
 <template>
   <div id="player">
-    <div
-      class="cover"
-      style="
-        background-image: url('https://upload.wikimedia.org/wikipedia/en/0/02/Sabrina_Carpenter_-_Taste.png');
-      "
-    ></div>
+    <div class="cover"></div>
     <div class="details">
       <div class="title">Taste</div>
       <div class="artist">Sabrina Carpenter</div>

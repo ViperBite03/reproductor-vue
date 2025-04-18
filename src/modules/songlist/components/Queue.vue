@@ -1,5 +1,6 @@
 <script setup>
-  import Song from '@/modules/songlist/components/Song.vue';
+  import Song from '@/modules/songlist/components/Song.vue'
+  import Search from './Search.vue'
 </script>
 
 <style lang="scss">
@@ -10,6 +11,7 @@
 <template>
   <div id="settings">
     <h2 class="g-title">QUEUE</h2>
+    <Search></Search>
 
     <div class="queue-list" v-for="n in 3" :key="n">
       <Song> </Song>
