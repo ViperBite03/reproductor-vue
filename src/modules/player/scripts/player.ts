@@ -1,126 +1,83 @@
-import type { IActiveSong, ISong } from "@/modules/player/interfaces/ISong";
-import type { ITag } from "@/modules/player/interfaces/ITag";
-import type { IPlaylist } from "@/modules/player/interfaces/IPlaylist";
-import { get } from "svelte/store";
-import { Howl, Howler } from "howler";
-import {
-  playlists,
-  songsFiltered,
-  songs,
-  filterSearch,
-  path,
-  activeSong,
-  isPaused,
-  rate,
-  newRate,
-  volume,
-  newVolume,
-  tags,
-  tagsSwitch,
-  fadeTime,
-  loop,
-  shuffle,
-  nightRate,
-  slowRate,
-  djMode,
-  djModeStart,
-  queue,
-} from "@/constants/godStore";
+import type { IActiveSong, ISong } from '@/modules/player/interfaces/ISong'
+import type { ITag } from '@/modules/player/interfaces/ITag'
+import type { IPlaylist } from '@/modules/player/interfaces/IPlaylist'
+import { Howl, Howler } from 'howler'
+import { useMusicStore } from '@/modules/shared/constants/godStore'
 
-let history: string[] = [];
-let historyIndex: number = -1;
+let history: string[] = []
+let historyIndex: number = -1
 
-let oldVolume: number = 0.5;
-let timeoutID;
+let oldVolume: number = 0.5
+let timeoutID
 
 const isInStoreTags = (songTagName: string, activeTags: ITag[]): boolean => {
-  return activeTags.some((storeTag: ITag) => storeTag.name === songTagName);
-};
+  return activeTags.some((storeTag: ITag) => storeTag.name === songTagName)
+}
+
+const getMusicStore = () => useMusicStore()
 
 //usar el Howler.pool para la lista de sonidos inactivos (autoplay)
 export const player = {
   filter() {
-    songsFiltered.update(() => {
-      const activeTags: ITag[] = get(tags).filter((tag: ITag) => tag.active);
-      const activePlaylists: IPlaylist[] = get(playlists).filter(
-        (playlist: IPlaylist) => playlist.active
-      );
-      return get(songs).filter((song: ISong) => {
-        // Search
-        let songTitle: string = song.title.toLowerCase();
-        let songArtist: string = song.artist.toLowerCase();
+    const activeTags: ITag[] = getMusicStore().tags.filter((tag: ITag) => tag.active)
+    const activePlaylists: IPlaylist[] = getMusicStore().playlists.filter((playlist: IPlaylist) => playlist.active)
+    getMusicStore().songsFiltered = getMusicStore().songs.filter((song: ISong) => {
+      // Search
+      let songTitle: string = song.title.toLowerCase()
+      let songArtist: string = song.artist.toLowerCase()
 
-        const includeTitle: boolean = songTitle.includes(
-          get(filterSearch).toLowerCase()
-        );
-        const includeArtist: boolean = songArtist.includes(
-          get(filterSearch).toLowerCase()
-        );
+      const includeTitle: boolean = songTitle.includes(getMusicStore().filterSearch.toLowerCase())
+      const includeArtist: boolean = songArtist.includes(getMusicStore().filterSearch.toLowerCase())
 
-        // Tags
-        let filterTags: boolean = false;
+      // Tags
+      let filterTags: boolean = false
 
-        if (get(tagsSwitch)) {
-          // Miramos si algun tag de la cancion coincide con algun tag activo
-          filterTags = activeTags.length
-            ? song.tags.some((tagName: string) =>
-                isInStoreTags(tagName, activeTags)
-              )
-            : true;
-        } else {
-          // Miramos si TODOS los tags de la cancion coincide con algun tag activo
-          filterTags = activeTags.every((tag: ITag) =>
-            song.tags.includes(tag.name)
-          );
-        }
+      if (getMusicStore().tagsSwitch) {
+        // Miramos si algun tag de la cancion coincide con algun tag activo
+        filterTags = activeTags.length ? song.tags.some((tagName: string) => isInStoreTags(tagName, activeTags)) : true
+      } else {
+        // Miramos si TODOS los tags de la cancion coincide con algun tag activo
+        filterTags = activeTags.every((tag: ITag) => song.tags.includes(tag.name))
+      }
 
-        // Playlist
-        let inPlaylistActive = true;
+      // Playlist
+      let inPlaylistActive = true
 
-        if (activePlaylists.length) {
-          inPlaylistActive = activePlaylists.some((p: IPlaylist) => {
-            if (!p.playlist.length) return true;
+      if (activePlaylists.length) {
+        inPlaylistActive = activePlaylists.some((p: IPlaylist) => {
+          if (!p.playlist.length) return true
 
-            return p.playlist.some(
-              (fileName: string) => fileName === song.fileName
-            );
-          });
-        }
+          return p.playlist.some((fileName: string) => fileName === song.fileName)
+        })
+      }
 
-        return (
-          (includeTitle || includeArtist) && filterTags && inPlaylistActive
-        );
-      });
-    });
+      return (includeTitle || includeArtist) && filterTags && inPlaylistActive
+    })
   },
   play(fileName: string, isHistory: boolean = false) {
-    const howlsList = (Howler as any)._howls;
+    const howlsList = (Howler as any)._howls
     if (howlsList.length === 1) {
-      console.log(howlsList, get(fadeTime));
-      timeoutID = setTimeout(() => howlsList[0].unload(), get(fadeTime) * 1000);
-      howlsList[0].fade(get(volume), 0, get(fadeTime) * 1000);
+      console.log(howlsList, getMusicStore().fadeTime)
+      timeoutID = setTimeout(() => howlsList[0].unload(), getMusicStore().fadeTime * 1000)
+      howlsList[0].fade(getMusicStore().volume, 0, getMusicStore().fadeTime * 1000)
     }
 
     if (howlsList.length === 2) {
-      howlsList[0].unload();
-      clearTimeout(timeoutID);
-      timeoutID = setTimeout(() => howlsList[0].unload(), get(fadeTime) * 1000);
-      howlsList[0].fade(get(volume), 0, get(fadeTime) * 1000);
+      howlsList[0].unload()
+      clearTimeout(timeoutID)
+      timeoutID = setTimeout(() => howlsList[0].unload(), getMusicStore().fadeTime * 1000)
+      howlsList[0].fade(getMusicStore().volume, 0, getMusicStore().fadeTime * 1000)
     }
 
-    //👍
-
     const howl = new Howl({
-      src: [get(path) + fileName],
-      rate: get(rate),
-      volume: get(volume),
-      onpause: () => isPaused.update(() => true),
+      src: [getMusicStore().path + fileName],
+      rate: getMusicStore().rate,
+      volume: getMusicStore().volume,
+      onpause: () => (getMusicStore().isPaused = true),
       onplay: () => {
-        isPaused.update(() => false);
+        getMusicStore().isPaused = false
 
-        const song: ISong = get(songs).find(
-          (song: ISong) => song.fileName === fileName
-        );
+        const song: ISong = getMusicStore().songs.find((song: ISong) => song.fileName === fileName)
 
         const newActiveSong: IActiveSong = {
           fileName: song.fileName,
@@ -131,145 +88,139 @@ export const player = {
           lyrics: song.lyrics,
           date: song.date,
           howl,
-        };
-
-        if (get(djMode)) {
-          const startTime = (howl.duration() * get(djModeStart)) / 100;
-
-          howl.seek(startTime);
         }
 
-        activeSong.update(() => newActiveSong);
-      },
-    });
+        if (getMusicStore().djMode) {
+          const startTime = (howl.duration() * getMusicStore().djModeStart) / 100
 
-    howl.play();
+          howl.seek(startTime)
+        }
+
+        getMusicStore().activeSong = newActiveSong
+      },
+      onplayerror: (err) => console.log(err),
+    })
+
+    howl.play()
 
     if (!isHistory) {
-      history = history.slice(0, historyIndex + 1);
-      history.push(fileName);
-      historyIndex++;
+      history = history.slice(0, historyIndex + 1)
+      history.push(fileName)
+      historyIndex++
     }
   },
   pause() {
-    get(activeSong).howl ? get(activeSong).howl.pause() : null;
+    getMusicStore().activeSong.howl ? getMusicStore().activeSong.howl.pause() : null
   },
   resume() {
-    get(activeSong).howl ? get(activeSong).howl.play() : null;
+    getMusicStore().activeSong.howl ? getMusicStore().activeSong.howl.play() : null
   },
   back() {
-    if (historyIndex) historyIndex--;
+    if (historyIndex) historyIndex--
 
-    player.play(history[historyIndex], true);
+    player.play(history[historyIndex], true)
   },
   forth() {
-    if (!get(queue).length && historyIndex < history.length - 1) {
-      historyIndex++;
-      player.play(history[historyIndex], true);
+    if (!getMusicStore().queue.length && historyIndex < history.length - 1) {
+      historyIndex++
+      player.play(history[historyIndex], true)
 
-      return;
+      return
     }
 
-    player.next();
+    player.next()
   },
   next() {
-    if (get(loop)) {
-      player.play(get(activeSong).fileName);
-      return;
+    if (getMusicStore().loop) {
+      player.play(getMusicStore().activeSong.fileName)
+      return
     }
 
-    if (get(queue).length) {
-      player.play(get(queue)[0].fileName);
-      player.removeSong(0);
+    if (getMusicStore().queue.length) {
+      player.play(getMusicStore().queue[0].fileName)
+      player.removeSong(0)
 
-      return;
+      return
     }
 
     //si la variable del random está on, las canciones de la cola son intocables, se pone random cuando acaban dichas canciones
-    let finalID: number = 0;
+    let finalID: number = 0
 
-    if (get(shuffle)) {
-      finalID = Math.floor(Math.random() * get(songsFiltered).length);
-      player.play(get(songsFiltered)[finalID].fileName);
+    if (getMusicStore().shuffle) {
+      finalID = Math.floor(Math.random() * getMusicStore().songsFiltered.length)
+      player.play(getMusicStore().songsFiltered[finalID].fileName)
 
-      return;
+      return
     }
 
     const nextSongID: number =
-      get(songsFiltered).findIndex(
-        (song: ISong) => song.fileName === get(activeSong).fileName
-      ) + 1;
-    if (nextSongID < get(songsFiltered).length) finalID = nextSongID;
+      getMusicStore().songsFiltered.findIndex((song: ISong) => song.fileName === getMusicStore().activeSong.fileName) +
+      1
+    if (nextSongID < getMusicStore().songsFiltered.length) finalID = nextSongID
 
-    player.play(get(songsFiltered)[finalID].fileName);
+    player.play(getMusicStore().songsFiltered[finalID].fileName)
   },
   updateRate() {
-    rate.update(() => get(newRate));
-    if (get(activeSong).howl) get(activeSong).howl.rate(get(newRate));
+    getMusicStore().rate = getMusicStore().newRate
+    if (getMusicStore().activeSong.howl) getMusicStore().activeSong.howl.rate(getMusicStore().newRate)
   },
   updateSlowed() {
-    newRate.update(() => (get(rate) >= 1 ? get(slowRate) : 1));
+    getMusicStore().newRate = getMusicStore().rate >= 1 ? getMusicStore().slowRate : 1
 
-    player.updateRate();
+    player.updateRate()
   },
-
   updateNightcore() {
-    newRate.update(() => (get(rate) <= 1 ? get(nightRate) : 1));
-
+    getMusicStore().newRate = getMusicStore().rate <= 1 ? getMusicStore().nightRate : 1
     //ha dejado de ir, Laia del futuro (el slowed tmb) aka: se está toggleando
 
-    player.updateRate();
+    player.updateRate()
   },
   updateLoop() {
-    loop.update((value) => !value);
+    getMusicStore().loop = !getMusicStore().loop
   },
-
   updateShuffle() {
-    shuffle.update((value) => !value);
+    getMusicStore().shuffle = !getMusicStore().shuffle
   },
   updateVolume(newValue: string) {
-    newVolume.update(() => Number(newValue));
-    volume.update(() => get(newVolume));
+    getMusicStore().newVolume = Number(newValue)
+    getMusicStore().volume = getMusicStore().newVolume
 
     // Guardamos el valor antiguo
-    oldVolume = get(newVolume);
+    oldVolume = getMusicStore().newVolume
 
     // Actualizamos la cancion que esta sonando ahora mismo
-    if (get(activeSong).howl) get(activeSong).howl.volume(get(newVolume));
+    if (getMusicStore().activeSong.howl) getMusicStore().activeSong.howl.volume(getMusicStore().newVolume)
 
-    window.localStorage.setItem("volume", JSON.stringify(get(newVolume)));
+    window.localStorage.setItem('volume', JSON.stringify(getMusicStore().newVolume))
   },
   toggleMute() {
-    volume.update(() => {
-      newVolume.update(() => (get(volume) ? 0 : oldVolume));
-      return get(newVolume);
-    });
+    getMusicStore().newVolume = getMusicStore().volume ? 0 : oldVolume
+    getMusicStore().volume = getMusicStore().newVolume
 
-    if (get(activeSong).howl) get(activeSong).howl.volume(get(newVolume));
+    if (getMusicStore().activeSong.howl) getMusicStore().activeSong.howl.volume(getMusicStore().newVolume)
   },
   removeSong(i: number) {
-    queue.update((value) => value.filter((_, index: number) => index != i));
+    getMusicStore().queue = getMusicStore().queue.filter((_, index: number) => index != i)
   },
-
   createTag(name: string, color: string) {
-    if (get(tags).find((value: ITag) => value.name === name)) {
-      return "* El nombre que has puesto ya existe";
+    if (getMusicStore().tags.find((value: ITag) => value.name === name)) {
+      return '* El nombre que has puesto ya existe'
     }
 
-    if (!name) return "* ¡El nombre esta vacio!";
+    if (!name) return '* ¡El nombre esta vacio!'
 
     const tag: ITag = {
       name,
       color,
-    };
+    }
 
-    tags.update((tags: ITag[]) => [...tags, tag]);
+    getMusicStore().tags = [...getMusicStore().tags, tag]
 
-    window.localStorage.setItem("tags", JSON.stringify(get(tags)));
+    window.localStorage.setItem('tags', JSON.stringify(getMusicStore().tags))
 
-    name = "";
-    color = "";
+    name = ''
+    color = ''
 
-    return "";
+    return ''
   },
-};
+}

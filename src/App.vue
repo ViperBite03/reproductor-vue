@@ -1,5 +1,6 @@
 <script setup>
-  import { ref } from 'vue'
+  import { onMounted, ref } from 'vue'
+  import { setAllSongs } from '@/modules/shared/scripts/generic'
   import gsap from 'gsap'
 
   import Songlist from '@/modules/songlist/components/Songlist.vue'
@@ -19,6 +20,10 @@
 
     expanded.value = !expanded.value*/
   }
+
+  onMounted(async () => {
+    await setAllSongs()
+  })
 </script>
 
 <style lang="scss">

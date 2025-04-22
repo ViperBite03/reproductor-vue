@@ -1,8 +1,10 @@
 <script setup>
+  import { player } from '@/modules/player/scripts/player'
   import { ref } from 'vue'
 
-  let title = ref('title')
-  let artist = ref('artist')
+  const props = defineProps(['song'])
+
+  console.log(props.song?.title)
 </script>
 
 <style lang="scss" scoped>
@@ -35,9 +37,9 @@
 </style>
 
 <template>
-  <div class="song-container">
-    <div class="cover g-shadow"></div>
-    <div class="title">{{ title }}</div>
-    <div class="artist">{{ artist }}</div>
+  <div class="song-container" v-if="props.song" @click="() => player.play(props.song.fileName)">
+    <div class="cover g-shadow" :style="{ 'background-image': `url('${props.song.cover}')` }"></div>
+    <div class="title">{{ props.song.title }}</div>
+    <div class="artist">{{ props.song.artist }}</div>
   </div>
 </template>

@@ -5,6 +5,8 @@
   import type { IScrapData } from '@/modules/backend/interfaces/IScrapData'
   import type { ISongMetadata } from '@/modules/backend/interfaces/ISongMetadata'
   import type { ITag } from '@/modules/player/interfaces/ITag'
+  import { ISong } from '@/modules/player/interfaces/ISong'
+  import { useMusicStore } from '@/modules/shared/constants/godStore'
 
   const youtubeURL = ref('')
   const songName = ref('test')
@@ -35,8 +37,9 @@
   }
 
   const saveSongAndMetadata = async () => {
+    const musicStore = useMusicStore()
     const fileName = `${songArtist.value} - ${songTitle.value}`
-    console.log(scrapResult)
+
     await window.electron.ipcRenderer.invoke('download-file', scrapResult.downloadURL, fileName)
 
     const metadata: ISongMetadata = {
@@ -50,9 +53,19 @@
     }
 
     await window.electron.ipcRenderer.invoke('write-metadata', metadata, fileName)
-    const readTest = await window.electron.ipcRenderer.invoke('read-metadata', fileName)
 
-    console.log('READ TEST:', readTest)
+    const song: ISong = {
+      fileName: fileName,
+      title: metadata.title || fileName,
+      artist: metadata.artist || '',
+      tags: metadata.extraData.tags,
+      date: new Date(metadata.date),
+      cover: metadata.extraData.cover || '',
+      lyrics: '',
+    }
+
+    musicStore.songs = [song, ...musicStore.songs]
+    musicStore.songsFiltered = [song, ...musicStore.songs]
   }
 
   const selectImage = (newUrl: string) => {
@@ -65,8 +78,8 @@
 
     const howl = new Howl({
       src: [path + songName.value + '.mp3'],
-      rate: 0.8,
-      volume: 0.5,
+      rate: 1.2,
+      volume: 0.2,
       onplay: () => {
         console.log('Playing...')
       },
@@ -74,6 +87,8 @@
         console.error(err)
       },
     })
+
+    console.log(path + songName.value + '.mp3')
 
     howl.play()
   }
@@ -140,6 +155,7 @@
 
     <button @click="saveSongAndMetadata">Descargar canción</button>
 
+    <input type="text" v-model="songName" />
     <button @click="play">Play song test</button>
   </div>
 </template>
