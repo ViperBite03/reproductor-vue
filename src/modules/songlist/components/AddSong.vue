@@ -9,7 +9,6 @@
   import { useMusicStore } from '@/modules/shared/constants/godStore'
 
   const youtubeURL = ref('')
-  const songName = ref('test')
 
   const songTitle: Ref<string> = ref('')
   const songArtist: Ref<string> = ref('')
@@ -65,32 +64,13 @@
     }
 
     musicStore.songs = [song, ...musicStore.songs]
-    musicStore.songsFiltered = [song, ...musicStore.songs]
+    musicStore.songsFiltered = musicStore.songs
+
+    console.log(musicStore.songs)
   }
 
   const selectImage = (newUrl: string) => {
     googleImageSelected.value = newUrl
-  }
-
-  const play = async () => {
-    const path = await window.electron.ipcRenderer.invoke('get-path')
-    console.log(path + songName.value + '.mp3')
-
-    const howl = new Howl({
-      src: [path + songName.value + '.mp3'],
-      rate: 1.2,
-      volume: 0.2,
-      onplay: () => {
-        console.log('Playing...')
-      },
-      onplayerror: (err) => {
-        console.error(err)
-      },
-    })
-
-    console.log(path + songName.value + '.mp3')
-
-    howl.play()
   }
 </script>
 
@@ -154,8 +134,5 @@
     </div>
 
     <button @click="saveSongAndMetadata">Descargar canción</button>
-
-    <input type="text" v-model="songName" />
-    <button @click="play">Play song test</button>
   </div>
 </template>

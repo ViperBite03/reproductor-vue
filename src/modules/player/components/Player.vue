@@ -1,8 +1,12 @@
 <script setup>
   import { ref } from 'vue'
   import Svg from '@/modules/shared/components/Svg.vue'
+  import { useMusicStore } from '@/modules/shared/constants/godStore'
+  import { player } from '@/modules/player/scripts/player'
 
   let playPause = ref(true)
+
+  const musicStore = useMusicStore()
 
   const togglePlay = () => {
     playPause.value = !playPause.value
@@ -29,7 +33,6 @@
       border-radius: var(--maxRadius);
       width: 100%;
       height: 50%;
-      background-image: url('https://upload.wikimedia.org/wikipedia/en/0/02/Sabrina_Carpenter_-_Taste.png');
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
@@ -91,10 +94,10 @@
 
 <template>
   <div id="player">
-    <div class="cover"></div>
+    <div class="cover" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>
     <div class="details">
-      <div class="title">Taste</div>
-      <div class="artist">Sabrina Carpenter</div>
+      <div class="title">{{ musicStore.activeSong.title }}</div>
+      <div class="artist">{{ musicStore.activeSong.artist }}</div>
     </div>
 
     <div class="progress-container">
@@ -105,7 +108,9 @@
       <div class="total-time">3:20</div>
     </div>
     <div class="player-buttons">
-      <button class="before btn">
+      <button @click="player.updateSlowed" :class="{ active: rateValue < 1 }">Slowed</button>
+
+      <button class="before btn" @click="player.back">
         <Svg name="Back" fill="var(--transparent)" stroke="white"></Svg>
       </button>
       <button class="play btn" ref="play" @click="togglePlay">
@@ -116,9 +121,12 @@
           <Svg name="PauseFilled" height="40" width="40" fill="white"></Svg>
         </span>
       </button>
-      <button class="after btn">
+      <button class="after btn" @click="player.forth">
         <Svg name="Forward" fill="var(--transparent)" stroke="white"></Svg>
       </button>
+
+      <!-- La clase active hay que maquetarla -->
+      <button @click="player.updateNightcore" :class="{ active: rateValue > 1 }">Nightcore</button>
     </div>
   </div>
 </template>

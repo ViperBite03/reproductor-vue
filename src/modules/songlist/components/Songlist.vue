@@ -17,6 +17,7 @@
   <div id="settings">
     <h2 class="g-title">SongList</h2>
 
+    <!-- Queue list porque? -->
     <div class="queue-list" v-for="song in musicStore.songsFiltered" :key="song.id">
       <Song :song="song"> </Song>
     </div>

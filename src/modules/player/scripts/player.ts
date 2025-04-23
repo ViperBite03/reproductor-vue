@@ -57,7 +57,6 @@ export const player = {
   play(fileName: string, isHistory: boolean = false) {
     const howlsList = (Howler as any)._howls
     if (howlsList.length === 1) {
-      console.log(howlsList, getMusicStore().fadeTime)
       timeoutID = setTimeout(() => howlsList[0].unload(), getMusicStore().fadeTime * 1000)
       howlsList[0].fade(getMusicStore().volume, 0, getMusicStore().fadeTime * 1000)
     }
@@ -69,8 +68,10 @@ export const player = {
       howlsList[0].fade(getMusicStore().volume, 0, getMusicStore().fadeTime * 1000)
     }
 
+    const mp3 = fileName.includes('.mp3') ? '' : '.mp3'
+
     const howl = new Howl({
-      src: [getMusicStore().path + fileName],
+      src: [getMusicStore().path + fileName + mp3],
       rate: getMusicStore().rate,
       volume: getMusicStore().volume,
       onpause: () => (getMusicStore().isPaused = true),

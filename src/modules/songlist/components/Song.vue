@@ -9,14 +9,19 @@
 
 <style lang="scss" scoped>
   .song-container {
+    position: relative;
+    transition: 0.3s ease;
+    cursor: pointer;
     display: grid;
     grid-template-columns: 65px 1fr;
     grid-template-rows: 1fr 1fr;
     margin: 10px 0;
 
-    .cover {
-      background-image: url('https://i1.sndcdn.com/artworks-4wL83CnbFTZa-0-t500x500.png');
+    &:hover {
+      padding-left: 10px;
+    }
 
+    .cover {
       height: 50px;
       width: 50px;
       border-radius: var(--maxRadius);

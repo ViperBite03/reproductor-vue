@@ -30,13 +30,15 @@
   @use '@/sass/global';
 
   #grid-container {
-    --col1: 1fr;
+    --col1: 350px;
 
+    position: relative;
+    width: 100vw;
     height: 100vh;
     display: grid;
 
-    grid-template-columns: var(--col1) 2fr 1fr;
-    grid-template-rows: 250px 1fr 1fr 1fr;
+    grid-template-columns: 320px 1fr 400px;
+    grid-template-rows: 220px 1fr 1fr 1fr;
 
     > * {
       box-shadow: inset 0 0 0 1px var(--colorPrimary);
