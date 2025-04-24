@@ -20,7 +20,7 @@
       border-radius: var(--maxRadius);
       bottom: 10px;
       left: 10px;
-      //background-color: rgba(0, 0, 0, 0.5);
+      background-color: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(1px);
 
       .total-songs {

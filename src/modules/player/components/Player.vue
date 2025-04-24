@@ -16,7 +16,10 @@
 <style lang="scss">
   #player {
     height: 100%;
+    width: 325px;
     padding: 25px;
+
+    justify-self: end;
 
     background-color: var(--colorPrimary);
     border-radius: var(--maxRadius);
@@ -32,7 +35,7 @@
       overflow: hidden;
       border-radius: var(--maxRadius);
       width: 100%;
-      height: 50%;
+      aspect-ratio: 1;
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
@@ -88,13 +91,41 @@
       .btn {
         height: 40px;
       }
+
+      .canActive {
+        border: none;
+        padding: 0;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+
+        .active {
+          height: 3px;
+          width: 10px;
+          background-color: white;
+          border-radius: var(--maxRadius);
+        }
+      }
+    }
+
+    button {
+      padding: 0;
+      border: none;
     }
   }
 </style>
 
 <template>
   <div id="player">
-    <div class="cover" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>
+    <!--<div class="cover" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>-->
+    <div
+      class="cover"
+      style="
+        background-image: url('https://cdn-images.dzcdn.net/images/artist/b2f2683e3b7531a956a32dd11a4b173d/1900x1900-000000-80-0-0.jpg');
+      "
+    ></div>
     <div class="details">
       <div class="title">{{ musicStore.activeSong.title }}</div>
       <div class="artist">{{ musicStore.activeSong.artist }}</div>
@@ -107,8 +138,12 @@
       </div>
       <div class="total-time">3:20</div>
     </div>
+
     <div class="player-buttons">
-      <button @click="player.updateSlowed" :class="{ active: rateValue < 1 }">Slowed</button>
+      <button @click="player.updateSlowed" :class="{ active: rateValue < 1 }" class="canActive">
+        <Svg name="Metronome" height="30" width="30" stroke="white" fill="var(--transparent)"></Svg>
+        <div class="active"></div>
+      </button>
 
       <button class="before btn" @click="player.back">
         <Svg name="Back" fill="var(--transparent)" stroke="white"></Svg>
@@ -126,7 +161,10 @@
       </button>
 
       <!-- La clase active hay que maquetarla -->
-      <button @click="player.updateNightcore" :class="{ active: rateValue > 1 }">Nightcore</button>
+      <button @click="player.updateNightcore" :class="{ active: rateValue > 1 }" class="canActive">
+        <Svg name="Groove" height="30" width="30" stroke="white"></Svg>
+        <div class="active"></div>
+      </button>
     </div>
   </div>
 </template>
