@@ -9,17 +9,14 @@
 </script>
 
 <style lang="scss">
-  #songlist {
+  .songlist {
+    height: 100%;
+    overflow-y: auto;
   }
 </style>
 
 <template>
-  <div id="settings">
-    <h2 class="g-title">SongList</h2>
-
-    <!-- Queue list porque? -->
-    <div class="queue-list" v-for="song in musicStore.songsFiltered" :key="song.id">
-      <Song :song="song"> </Song>
-    </div>
+  <div class="songlist">
+    <Song v-for="song in musicStore.songsFiltered" :key="song.id" :song="song"> </Song>
   </div>
 </template>

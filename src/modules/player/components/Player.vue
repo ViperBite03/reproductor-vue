@@ -119,13 +119,13 @@
 
 <template>
   <div id="player">
-    <!--<div class="cover" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>-->
-    <div
+    <div class="cover" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>
+    <!-- <div
       class="cover"
       style="
         background-image: url('https://cdn-images.dzcdn.net/images/artist/b2f2683e3b7531a956a32dd11a4b173d/1900x1900-000000-80-0-0.jpg');
       "
-    ></div>
+    ></div> -->
     <div class="details">
       <div class="title">{{ musicStore.activeSong.title }}</div>
       <div class="artist">{{ musicStore.activeSong.artist }}</div>

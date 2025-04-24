@@ -32,11 +32,17 @@
     .title {
       font-weight: bold;
       align-self: end;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .artist {
       font-weight: lighter;
       font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 </style>
