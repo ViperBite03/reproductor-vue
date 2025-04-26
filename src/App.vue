@@ -40,6 +40,17 @@
       }
     }
 
+    .bg {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0.5;
+      filter: blur(30px);
+    }
+
     .container {
       position: relative;
       height: 100%;
@@ -74,6 +85,8 @@
 
 <template>
   <div id="grid-container" :class="{ openLeftPanel: musicStore.panel }">
+    <div class="bg" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>
+
     <div class="container settings-container" @click="toggle">
       <Settings v-show="musicStore.panel" />
     </div>

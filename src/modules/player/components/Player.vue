@@ -1,15 +1,67 @@
-<script setup>
-  import { ref } from 'vue'
+<script lang="ts" setup>
+  import { ref, watch, Ref } from 'vue'
   import Svg from '@/modules/shared/components/Svg.vue'
   import { useMusicStore } from '@/modules/shared/constants/godStore'
   import { player } from '@/modules/player/scripts/player'
 
   const musicStore = useMusicStore()
+  const totalDurationFormatted: Ref<string> = ref('0:00')
+  const currentDurationFormatted: Ref<string> = ref('0:00')
+  const translate: Ref<number> = ref(105)
+  const holding: Ref<boolean> = ref(false)
+  const mousePosition: Ref<number> = ref(0)
+
+  let progressPercentage: number = 0
+  let flag: boolean = false
+
+  const formatToDuration = (duration: number): string => {
+    let min: number = ~~(duration / 60)
+    let sec: number = ~~(duration % 60)
+
+    let secZeros = sec < 10 ? '0' : ''
+
+    return min + ':' + secZeros + sec
+  }
+
+  setInterval(() => {
+    if (!musicStore.activeSong || !musicStore.activeSong.howl) return
+
+    currentDurationFormatted.value = formatToDuration(~~musicStore.activeSong.howl.seek())
+
+    progressPercentage = (musicStore.activeSong.howl.seek() * 100) / musicStore.activeSong.howl.duration()
+
+    translate.value = 100 - progressPercentage
+
+    /*if (holding) progressChange()
+
+    const songOffset: number = musicStore.activeSong.howl.duration() - get(fadeTime)
+
+    if (get(djMode)) {
+      const endTime = (musicStore.activeSong.howl.duration() * get(djModeFinish)) / 100
+
+      if (musicStore.activeSong.howl.seek() > endTime && !flag) {
+        flag = true
+        player.next()
+      }
+    } else if (musicStore.activeSong.howl.seek() > songOffset && !flag) {
+      flag = true
+      player.next()
+    }
+
+    if (musicStore.activeSong.howl.seek() < songOffset) flag = false*/
+  }, 100)
+
+  watch(
+    () => musicStore.activeSong.howl,
+    (howl) => {
+      if (!howl) return
+
+      totalDurationFormatted.value = formatToDuration(~~howl.duration())
+    }
+  )
 
   const togglePlay = () => {
     musicStore.isPaused ? player.resume() : player.pause()
-
-    console.log(musicStore.isPaused)
   }
 </script>
 
@@ -19,9 +71,7 @@
     width: 100%;
     padding: 25px;
 
-    justify-self: end;
-
-    background-color: var(--colorPrimary);
+    background-color: var(--lilac);
     border-radius: var(--maxRadius);
 
     display: flex;
@@ -29,7 +79,7 @@
     justify-content: space-between;
     align-items: center;
 
-    box-shadow: 0px 10px 29px -14px var(--colorSecondary);
+    box-shadow: 0px 10px 29px -14px var(--darkLilac);
 
     .cover {
       overflow: hidden;
@@ -46,12 +96,12 @@
 
       .title {
         font-size: 25px;
-        color: white;
+        color: var(--colorText);
         font-weight: bold;
       }
 
       .artist {
-        color: white;
+        color: var(--colorText);
         font-weight: lighter;
       }
     }
@@ -64,21 +114,21 @@
 
       .progress-bar {
         width: 100%;
-        height: 8px;
-        background-color: white;
+        height: 5px;
+        background-color: var(--colorText);
         border-radius: 50px;
         overflow: hidden;
 
         .progress {
-          height: 10px;
-          width: 50%;
-          background-color: red;
+          height: 5px;
+          background-color: var(--darkLilac);
         }
       }
 
       .actual-time,
       .total-time {
-        color: white;
+        color: var(--colorText);
+        width: 35px;
       }
     }
 
@@ -104,7 +154,7 @@
         .under-bar {
           height: 3px;
           width: 0;
-          background-color: white;
+          background-color: var(--colorText);
           border-radius: var(--maxRadius);
           transition: 0.3s;
         }
@@ -126,45 +176,48 @@
 
 <template>
   <div id="player">
-    <div class="cover" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>
+    <div class="cover g-shadow" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>
+
     <div class="details">
       <div class="title">{{ musicStore.activeSong.title }}</div>
       <div class="artist">{{ musicStore.activeSong.artist }}</div>
     </div>
 
     <div class="progress-container">
-      <div class="actual-time">1:60</div>
+      <div class="actual-time">{{ currentDurationFormatted }}</div>
+
       <div class="progress-bar">
-        <div class="progress"></div>
+        <div class="progress" :style="{ transform: `translateX(-${translate}%)` }"></div>
       </div>
-      <div class="total-time">3:20</div>
+
+      <div class="total-time">{{ totalDurationFormatted }}</div>
     </div>
 
     <div class="player-buttons">
       <button @click="player.updateSlowed" :class="{ active: musicStore.rate < 1 }" class="canActive">
-        <Svg name="Metronome" height="30" width="30" stroke="white" fill="var(--transparent)"></Svg>
+        <Svg name="Metronome" height="30" width="30" stroke="var(--colorText)" fill="var(--transparent)"></Svg>
         <div class="under-bar"></div>
       </button>
 
       <button class="before btn" @click="player.back">
-        <Svg name="Back" fill="var(--transparent)" stroke="white"></Svg>
+        <Svg name="Back" fill="var(--transparent)" stroke="var(--colorText)"></Svg>
       </button>
 
       <button class="play btn" ref="play" @click="togglePlay">
         <span v-if="musicStore.isPaused">
-          <Svg name="PlayFilled" height="40" width="40" fill="white"></Svg>
+          <Svg name="PlayFilled" height="40" width="40" fill="var(--colorText)"></Svg>
         </span>
         <span v-else>
-          <Svg name="PauseFilled" height="40" width="40" fill="white"></Svg>
+          <Svg name="PauseFilled" height="40" width="40" fill="var(--colorText)"></Svg>
         </span>
       </button>
 
       <button class="after btn" @click="player.forth">
-        <Svg name="Forward" fill="var(--transparent)" stroke="white"></Svg>
+        <Svg name="Forward" fill="var(--transparent)" stroke="var(--colorText)"></Svg>
       </button>
 
       <button @click="player.updateNightcore" :class="{ active: musicStore.rate > 1 }" class="canActive">
-        <Svg name="Groove" height="30" width="30" stroke="white"></Svg>
+        <Svg name="Groove" height="30" width="30" stroke="var(--colorText)"></Svg>
         <div class="under-bar"></div>
       </button>
     </div>

@@ -11,7 +11,7 @@
     transition: 0.3s ease;
     cursor: pointer;
     display: grid;
-    grid-template-columns: 65px 1fr;
+    grid-template-columns: 90px 1fr;
     grid-template-rows: 1fr 1fr;
     padding: 10px 20px;
 
@@ -20,8 +20,8 @@
     }
 
     .cover {
-      height: 50px;
-      width: 50px;
+      height: 75px;
+      width: 75px;
       border-radius: var(--maxRadius);
 
       grid-row: span 2;

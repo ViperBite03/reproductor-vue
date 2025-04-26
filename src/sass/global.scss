@@ -4,7 +4,7 @@
 
 button {
   transition: 0.3s ease;
-  border: 1px solid var(--colorSecondary);
+  border: 1px solid var(--darkLilac);
   border-radius: var(--radius);
   padding: 10px 20px;
 
@@ -15,19 +15,19 @@ button {
 
 input {
   transition: 0.3s ease;
-  border: 1px solid var(--colorPrimary);
+  border: 1px solid var(--lilac);
   padding: 10px;
   border-radius: 50px;
   background-color: transparent;
   outline: none;
 
   &:focus {
-    border: 1px solid var(--colorSecondary);
+    border: 1px solid var(--darkLilac);
   }
 }
 
 .g-title {
-  font-weight: bold;
+  //font-weight: bold;
   padding-bottom: 10px;
   font-size: 30px;
 }

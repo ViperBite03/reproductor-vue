@@ -1,30 +1,32 @@
 @use 'src/sass/mixins.scss' as *;
 
 :root {
-  --colorPrimary: #567c8d;
-  --colorSecondary: #2f4156;
-  --colorAccent: #f5edeb;
-  --colorNeutral: #c8d9e6;
+  --lilac: #d19df0; //#567c8d;
+  --darkLilac: #421059; //#2f4156;
+  --colorAccent: #c6da54; //#f5edeb;
+  --colorNeutral: #09080e; //#c8d9e6;
 
   --colorText: #222222;
   --colorText2: #627472;
   --colorText3: #fff;
 
-  --colorBorder: #d3d3d3;
+  --colorText: #fff;
+  --colorText2: #627472;
+  --colorText3: #1c1c28;
+
   --transparent: #00000000;
 
   --maxRadius: 15px;
-  --minRadius: 8px;
   --radius: 10px;
-  --menuHeight: 60px; // update globalVariables.ts MENU_HEIGHT
-  --fontPrimary: 'Winky Rough';
+
+  --fontPrimary: 'Hello Bonia Serif'; // 'Horence';
   --fontSecondary: 'Quicksand';
 }
 
 .dark-mode {
   --colorNeutral: #121212; // #282828
-  --colorSecondary: #282828;
-  --colorSecondary2: #3f3f3f;
+  --darkLilac: #282828;
+  --darkLilac2: #3f3f3f;
   --colorBorder: rgba(255, 255, 255, 0.2);
   --colorText: #f3f3f3;
   --colorText2: #adadad;
