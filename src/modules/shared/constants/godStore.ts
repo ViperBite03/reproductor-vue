@@ -9,7 +9,7 @@ export const useMusicStore = defineStore('music', {
     songs: [] as ISong[],
     songsFiltered: [] as ISong[],
     queue: [] as ISong[],
-    panel: '',
+    panel: '', // IPanelOptions
     tags: [] as ITag[],
     tagsSwitch: false,
     filterSearch: '',

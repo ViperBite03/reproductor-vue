@@ -13,10 +13,10 @@
     display: grid;
     grid-template-columns: 65px 1fr;
     grid-template-rows: 1fr 1fr;
-    margin: 10px 0;
+    padding: 10px 20px;
 
     &:hover {
-      padding-left: 10px;
+      background-color: rgba(0, 0, 0, 0.1);
     }
 
     .cover {

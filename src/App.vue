@@ -1,25 +1,15 @@
 <script setup>
   import { onMounted, ref } from 'vue'
   import { setAllSongs } from '@/modules/shared/scripts/generic'
-  import gsap from 'gsap'
 
   import Songlist from '@/modules/songlist/components/Songlist.vue'
   import Player from '@/modules/player/components/Player.vue'
   import Settings from '@/modules/settings/components/Settings.vue'
   import Playlist from '@/modules/playlist/components/Playlist.vue'
   import Queue from '@/modules/songlist/components/Queue.vue'
+  import { useMusicStore } from './modules/shared/constants/godStore'
 
-  const expanded = ref(true)
-
-  const toggle = () => {
-    /* gsap.to('#grid-container', {
-      duration: 2,
-      ease: 'elastic.inOut',
-      '--col1': expanded.value ? '3fr' : '1fr',
-    })
-
-    expanded.value = !expanded.value*/
-  }
+  const musicStore = useMusicStore()
 
   onMounted(async () => {
     await setAllSongs()
@@ -30,58 +20,79 @@
   @use '@/sass/global';
 
   #grid-container {
-    --col1: 350px;
-
+    transition: 0.3s ease;
     position: relative;
+    max-width: 100vw;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
 
     display: grid;
-    //grid-template-columns: 320px 1fr 400px;
-    grid-template-columns: minmax(320px, 1fr) 2fr minmax(400px, 1fr);
+    grid-template-columns: 0px 1fr 350px;
+    grid-template-rows: 70px 220px 1fr 1fr 1fr;
 
-    grid-template-rows: 220px 1fr 1fr 1fr;
+    &.openLeftPanel {
+      grid-template-columns: 320px 1fr 350px;
 
-    > * {
-      box-shadow: inset 0 0 0 1px var(--colorPrimary);
-      padding: 20px;
+      .settings-container {
+        padding: 20px;
+        opacity: 1;
+      }
+    }
+
+    .container {
+      position: relative;
       height: 100%;
+      min-width: 0;
+      min-height: 0;
+
+      &:not(.settings-container, .songs-container) {
+        padding: 20px;
+      }
     }
 
     .settings-container {
-      grid-row: span 4;
+      transition: 0.3s opacity 0.2s;
+      opacity: 0;
+
+      grid-row: span 5;
+    }
+
+    .queue-container {
+      grid-row: span 3;
+    }
+
+    .player-container {
+      grid-row: span 2;
     }
 
     .songs-container {
       grid-row: span 3;
     }
-
-    .player-container,
-    .queue-container {
-      grid-row: span 2;
-    }
   }
 </style>
 
 <template>
-  <div id="grid-container">
-    <div class="settings-container" @click="toggle">
-      <Settings />
+  <div id="grid-container" :class="{ openLeftPanel: musicStore.panel }">
+    <div class="container settings-container" @click="toggle">
+      <Settings v-show="musicStore.panel" />
     </div>
 
-    <div class="playlist-container">
-      <Playlist />
-    </div>
+    <div class="container toolbar-container">ToolBar</div>
 
-    <div class="queue-container">
+    <div class="container queue-container">
       <Queue />
     </div>
 
-    <div class="songs-container">
+    <div class="container playlist-container">
+      <Playlist />
+    </div>
+
+    <div class="container songs-container">
       <Songlist />
     </div>
-    <div class="player-container">
+
+    <div class="container player-container">
       <Player />
     </div>
   </div>

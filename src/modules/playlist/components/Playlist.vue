@@ -14,13 +14,15 @@
       display: flex;
       gap: 15px;
       height: 100%;
+      width: 100%;
+      overflow-y: hidden;
     }
   }
 </style>
 
 <template>
   <div id="playlist">
-    <h2 class="g-title">PLAYLIST</h2>
+    <h2 class="g-title">PLAYLISTS</h2>
 
     <div class="p-list">
       <div class="p-item" v-for="n in 4" :key="n">

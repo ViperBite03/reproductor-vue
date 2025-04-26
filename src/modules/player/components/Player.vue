@@ -16,7 +16,7 @@
 <style lang="scss">
   #player {
     height: 100%;
-    width: 325px;
+    width: 100%;
     padding: 25px;
 
     justify-self: end;
