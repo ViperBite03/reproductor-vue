@@ -4,12 +4,12 @@
   import { useMusicStore } from '@/modules/shared/constants/godStore'
   import { player } from '@/modules/player/scripts/player'
 
-  let playPause = ref(true)
-
   const musicStore = useMusicStore()
 
   const togglePlay = () => {
-    playPause.value = !playPause.value
+    musicStore.isPaused ? player.resume() : player.pause()
+
+    console.log(musicStore.isPaused)
   }
 </script>
 
@@ -101,11 +101,18 @@
         align-items: center;
         gap: 3px;
 
-        .active {
+        .under-bar {
           height: 3px;
-          width: 10px;
+          width: 0;
           background-color: white;
           border-radius: var(--maxRadius);
+          transition: 0.3s;
+        }
+
+        &.active {
+          .under-bar {
+            width: 10px;
+          }
         }
       }
     }
@@ -120,12 +127,6 @@
 <template>
   <div id="player">
     <div class="cover" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>
-    <!-- <div
-      class="cover"
-      style="
-        background-image: url('https://cdn-images.dzcdn.net/images/artist/b2f2683e3b7531a956a32dd11a4b173d/1900x1900-000000-80-0-0.jpg');
-      "
-    ></div> -->
     <div class="details">
       <div class="title">{{ musicStore.activeSong.title }}</div>
       <div class="artist">{{ musicStore.activeSong.artist }}</div>
@@ -140,30 +141,31 @@
     </div>
 
     <div class="player-buttons">
-      <button @click="player.updateSlowed" :class="{ active: rateValue < 1 }" class="canActive">
+      <button @click="player.updateSlowed" :class="{ active: musicStore.rate < 1 }" class="canActive">
         <Svg name="Metronome" height="30" width="30" stroke="white" fill="var(--transparent)"></Svg>
-        <div class="active"></div>
+        <div class="under-bar"></div>
       </button>
 
       <button class="before btn" @click="player.back">
         <Svg name="Back" fill="var(--transparent)" stroke="white"></Svg>
       </button>
+
       <button class="play btn" ref="play" @click="togglePlay">
-        <span v-if="playPause">
+        <span v-if="musicStore.isPaused">
           <Svg name="PlayFilled" height="40" width="40" fill="white"></Svg>
         </span>
         <span v-else>
           <Svg name="PauseFilled" height="40" width="40" fill="white"></Svg>
         </span>
       </button>
+
       <button class="after btn" @click="player.forth">
         <Svg name="Forward" fill="var(--transparent)" stroke="white"></Svg>
       </button>
 
-      <!-- La clase active hay que maquetarla -->
-      <button @click="player.updateNightcore" :class="{ active: rateValue > 1 }" class="canActive">
+      <button @click="player.updateNightcore" :class="{ active: musicStore.rate > 1 }" class="canActive">
         <Svg name="Groove" height="30" width="30" stroke="white"></Svg>
-        <div class="active"></div>
+        <div class="under-bar"></div>
       </button>
     </div>
   </div>

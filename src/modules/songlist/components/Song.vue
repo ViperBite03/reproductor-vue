@@ -3,8 +3,6 @@
   import { ref } from 'vue'
 
   const props = defineProps(['song'])
-
-  console.log(props.song?.title)
 </script>
 
 <style lang="scss" scoped>

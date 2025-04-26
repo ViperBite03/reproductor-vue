@@ -38,7 +38,9 @@
     overflow: hidden;
 
     display: grid;
-    grid-template-columns: 320px 1fr 400px;
+    //grid-template-columns: 320px 1fr 400px;
+    grid-template-columns: minmax(320px, 1fr) 2fr minmax(400px, 1fr);
+
     grid-template-rows: 220px 1fr 1fr 1fr;
 
     > * {
