@@ -8,12 +8,13 @@
 </script>
 
 <style lang="scss">
-  .settings {
+  #settings-panel {
   }
 </style>
 
 <template>
-  <div class="settings">
-    <h2 class="g-title">Settings</h2>
+  <div id="settings-panel">
+    <AddSong v-if="musicStore.panel === PANEL_OPTIONS.addSong" />
+    <Settings v-if="musicStore.panel === PANEL_OPTIONS.settings" />
   </div>
 </template>

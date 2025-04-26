@@ -6,10 +6,13 @@
 
   const musicStore = useMusicStore()
 
-  console.log(musicStore)
-
   const toggleAddSong = () => {
-    musicStore.panel = musicStore.panel ? '' : PANEL_OPTIONS.addSong
+    if (musicStore.panel === PANEL_OPTIONS.addSong) {
+      musicStore.panel = ''
+      return
+    }
+
+    musicStore.panel = PANEL_OPTIONS.addSong
   }
 </script>
 

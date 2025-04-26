@@ -1,11 +1,12 @@
 <script setup>
-  import { onMounted, ref } from 'vue'
+  import { onMounted } from 'vue'
   import { setAllSongs } from '@/modules/shared/scripts/generic'
 
   import Songlist from '@/modules/songlist/components/Songlist.vue'
   import Player from '@/modules/player/components/Player.vue'
-  import Settings from '@/modules/settings/components/Settings.vue'
+  import SettingsPanel from '@/modules/settings/components/SettingsPanel.vue'
   import Playlist from '@/modules/playlist/components/Playlist.vue'
+  import Toolbar from '@/modules/shared/components/Toolbar.vue'
   import Queue from '@/modules/songlist/components/Queue.vue'
   import { useMusicStore } from './modules/shared/constants/godStore'
 
@@ -63,7 +64,7 @@
     }
 
     .settings-container {
-      transition: 0.3s opacity 0.2s;
+      transition: 0.3s opacity 0.3s;
       opacity: 0;
 
       grid-row: span 5;
@@ -88,10 +89,12 @@
     <div class="bg" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>
 
     <div class="container settings-container" @click="toggle">
-      <Settings v-show="musicStore.panel" />
+      <SettingsPanel v-show="musicStore.panel" />
     </div>
 
-    <div class="container toolbar-container">ToolBar</div>
+    <div class="container toolbar-container">
+      <Toolbar />
+    </div>
 
     <div class="container queue-container">
       <Queue />
