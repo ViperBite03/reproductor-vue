@@ -60,7 +60,11 @@ export const player = {
   order(desc: boolean = false) {
     if (!getMusicStore().orderBy) return
 
-    getMusicStore().songsFiltered = getMusicStore().songsFiltered.sort((a: ISong, b: ISong) => {
+    if (getMusicStore().orderBy === 'shuffle') {
+      return getMusicStore().songsFiltered.sort(() => Math.random() - 0.5)
+    }
+
+    getMusicStore().songsFiltered.sort((a: ISong, b: ISong) => {
       const valueA = a[getMusicStore().orderBy]
       const valueB = b[getMusicStore().orderBy]
 

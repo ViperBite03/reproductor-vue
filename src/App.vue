@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
   import { onMounted } from 'vue'
   import { setAllSongs } from '@/modules/shared/scripts/generic'
 
@@ -12,7 +12,20 @@
 
   const musicStore = useMusicStore()
 
+  const getSettings = () => {
+    musicStore.volume = Number(JSON.parse(window.localStorage.getItem('volume') || '""')) || musicStore.volume
+
+    musicStore.nightRate = Number(window.localStorage.getItem('nightValue')) || musicStore.nightRate
+    musicStore.slowRate = Number(window.localStorage.getItem('slowValue')) || musicStore.slowRate
+
+    musicStore.djModeStart = Number(window.localStorage.getItem('djModeStart') || musicStore.djModeStart)
+    musicStore.djModeFinish = Number(window.localStorage.getItem('djModeFinish') || musicStore.djModeFinish)
+  }
+
   onMounted(async () => {
+    musicStore.tags = JSON.parse(window.localStorage.getItem('tags') || '[]')
+    musicStore.playlists = JSON.parse(window.localStorage.getItem('playlists') || '[]')
+    getSettings()
     await setAllSongs()
   })
 </script>
@@ -88,7 +101,7 @@
   <div id="grid-container" :class="{ openLeftPanel: musicStore.panel }">
     <div class="bg" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>
 
-    <div class="container settings-container" @click="toggle">
+    <div class="container settings-container">
       <SettingsPanel v-show="musicStore.panel" />
     </div>
 

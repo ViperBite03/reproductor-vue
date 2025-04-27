@@ -1,12 +1,11 @@
 <script lang="ts" setup>
   import { Ref, ref } from 'vue'
   import { cleanYouTubeTitle } from '@/modules/settings/scripts/cleanTitle'
-  import { Howl } from 'howler'
   import type { IScrapData } from '@/modules/backend/interfaces/IScrapData'
   import type { ISongMetadata } from '@/modules/backend/interfaces/ISongMetadata'
-  import type { ITag } from '@/modules/player/interfaces/ITag'
   import { ISong } from '@/modules/player/interfaces/ISong'
   import { useMusicStore } from '@/modules/shared/constants/godStore'
+  import { ITag } from '@/modules/player/interfaces/ITag'
 
   const youtubeURL = ref('')
 
@@ -15,9 +14,12 @@
   const songTags: Ref<string[]> = ref([])
   const loadingMetaData: Ref<boolean> = ref(false)
   const loadingMP3: Ref<boolean> = ref(false)
+  const selectedTags: Ref<string[]> = ref([])
 
   const googleImages: Ref<string[]> = ref([])
   const googleImageSelected: Ref<string> = ref('')
+
+  const musicStore = useMusicStore()
 
   let scrapResult: IScrapData
 
@@ -42,7 +44,6 @@
   const saveSongAndMetadata = async () => {
     loadingMP3.value = true
 
-    const musicStore = useMusicStore()
     const fileName = `${songArtist.value} - ${songTitle.value}`
 
     await window.electron.ipcRenderer.invoke('download-file', scrapResult.downloadURL, fileName)
@@ -85,17 +86,42 @@
   const selectImage = (newUrl: string) => {
     googleImageSelected.value = newUrl
   }
+
+  const toggleTag = (tagName: string) => {
+    if (selectedTags.value.includes(tagName)) {
+      selectedTags.value = selectedTags.value.filter((x) => x != tagName)
+      return
+    }
+
+    selectedTags.value = [...selectedTags.value, tagName]
+  }
 </script>
 
 <style lang="scss" scoped>
   #add-song {
     overflow-y: auto;
+
     .section {
       display: flex;
       flex-direction: column;
       gap: 10px;
       padding-bottom: 20px;
       padding-top: 10px;
+
+      .tag-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+        padding-bottom: 20px;
+
+        .g-tag {
+          cursor: pointer;
+
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+      }
     }
 
     .google-images {
@@ -153,6 +179,20 @@
       </div>
 
       <input type="text" v-model="googleImageSelected" placeholder="Image url" />
+    </div>
+
+    <div class="section">
+      <div class="tag-list">
+        <div
+          class="g-tag"
+          v-for="tag in musicStore.tags"
+          :class="{ active: selectedTags.includes(tag.name) }"
+          :style="{ 'background-color': tag.color }"
+          @click="() => toggleTag(tag.name)"
+        >
+          {{ tag.name }}
+        </div>
+      </div>
     </div>
 
     <button @click="saveSongAndMetadata">{{ loadingMP3 ? 'Descargando...' : 'Descargar canción' }}</button>

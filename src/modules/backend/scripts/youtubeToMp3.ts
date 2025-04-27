@@ -14,6 +14,7 @@ export const downloadFile = async (url: string, fileName: string): Promise<strin
   if (!fs.existsSync(musicFolderPath)) {
     fs.mkdirSync(musicFolderPath, { recursive: true })
   }
+
   const filePath = path.join(musicFolderPath, fileName + '.mp3')
   const response = await fetch(url)
 

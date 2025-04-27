@@ -3,6 +3,7 @@
   import { PANEL_OPTIONS } from '@/modules/settings/constants/settings'
   import Svg from '@/modules/shared/components/Svg.vue'
   import Search from '@/modules/songlist/components/Search.vue'
+  import type { ITag } from '@/modules/player/interfaces/ITag'
   import type { IOrderOptions, IDropdownOptions } from '@/modules/shared/interfaces/IToolbarOptions'
   import { ref, Ref } from 'vue'
   import { player } from '@/modules/player/scripts/player'
@@ -21,19 +22,22 @@
     musicStore.panel = PANEL_OPTIONS.settings
   }
 
-  const toggleOrder = (newOrder: IOrderOptions) => {
-    if (newOrder === musicStore.orderBy) {
-      musicStore.orderBy = ''
+  const toggleTagEditor = () => {
+    if (musicStore.panel === PANEL_OPTIONS.tagEditor) {
+      musicStore.panel = ''
       return
     }
 
+    musicStore.panel = PANEL_OPTIONS.tagEditor
+  }
+
+  const toggleOrder = (newOrder: IOrderOptions) => {
     musicStore.orderBy = newOrder
     player.order(isOrderDesc.value)
   }
 
   const toggleAz = () => {
     isOrderDesc.value = !isOrderDesc.value
-
     player.order(isOrderDesc.value)
   }
 
@@ -44,6 +48,18 @@
     }
 
     currentDropdown.value = newDropdown
+  }
+
+  const toggleTag = (tagName: string) => {
+    musicStore.tags = musicStore.tags.map((tag: ITag) => {
+      if (tag.name === tagName) {
+        tag.active = !tag.active
+      }
+
+      return tag
+    })
+
+    player.filter()
   }
 </script>
 
@@ -71,6 +87,21 @@
 
       .g-title {
         font-size: 20px;
+      }
+
+      .tag-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+        padding-bottom: 20px;
+      }
+
+      .g-tag {
+        cursor: pointer;
+
+        &:hover {
+          opacity: 0.8;
+        }
       }
 
       .buttons {
@@ -118,6 +149,20 @@
 
     <div class="dropdown filters" v-if="currentDropdown === 'tags'">
       <h2 class="g-title">Filter Tags</h2>
+
+      <div class="tag-list">
+        <div
+          class="g-tag"
+          v-for="tag in musicStore.tags"
+          :class="{ active: tag.active }"
+          :style="{ 'background-color': tag.color }"
+          @click="() => toggleTag(tag.name)"
+        >
+          {{ tag.name }}
+        </div>
+      </div>
+
+      <button @click="toggleTagEditor" style="width: 100%">Edit tags</button>
     </div>
 
     <button class="tool" @click="toggleSettings">

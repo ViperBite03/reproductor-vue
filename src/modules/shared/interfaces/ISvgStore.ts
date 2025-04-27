@@ -1,4 +1,5 @@
-export type SvgStore = {Back: string
+export type SvgStore = {AddTag: string
+Back: string
 CopyAdd: string
 Filters: string
 FolderAdd: string

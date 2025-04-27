@@ -32,10 +32,13 @@ export const setAllSongs = async () => {
     })
   )
 
-  /*for (let tag of tagsFromSongs) {
+  for (let tag of tagsFromSongs) {
     player.createTag(tag, '#FFFFFF')
-  } */
+  }
 
   musicStore.songs = allSongs // [song, ...musicStore.songs]
   musicStore.songsFiltered = allSongs
+
+  musicStore.orderBy = 'artist'
+  player.order()
 }
