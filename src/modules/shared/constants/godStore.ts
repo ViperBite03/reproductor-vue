@@ -18,7 +18,7 @@ export const useMusicStore = defineStore('music', {
     rate: 1,
     newRate: 1,
     nightRate: 1.2,
-    slowRate: 0.8,
+    slowRate: 0.9,
     djMode: false,
     djModeStart: 20,
     djModeFinish: 80,
@@ -29,6 +29,9 @@ export const useMusicStore = defineStore('music', {
     fadeTime: 5,
     loop: false,
     shuffle: false,
+
+    orderBy: '',
+    filterBy: '',
 
     activeSong: {
       fileName: '',

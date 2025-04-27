@@ -159,7 +159,7 @@
           transition: 0.3s;
         }
 
-        &.active {
+        &.activeX {
           .under-bar {
             width: 10px;
           }
@@ -195,7 +195,7 @@
     </div>
 
     <div class="player-buttons">
-      <button @click="player.updateSlowed" :class="{ active: musicStore.rate < 1 }" class="canActive">
+      <button @click="player.updateSlowed" :class="{ activeX: musicStore.rate < 1 }" class="canActive">
         <Svg name="Metronome" height="30" width="30" stroke="var(--colorText)" fill="var(--transparent)"></Svg>
         <div class="under-bar"></div>
       </button>
@@ -217,7 +217,7 @@
         <Svg name="Forward" fill="var(--transparent)" stroke="var(--colorText)"></Svg>
       </button>
 
-      <button @click="player.updateNightcore" :class="{ active: musicStore.rate > 1 }" class="canActive">
+      <button @click="player.updateNightcore" :class="{ activeX: musicStore.rate > 1 }" class="canActive">
         <Svg name="Groove" height="30" width="30" stroke="var(--colorText)"></Svg>
         <div class="under-bar"></div>
       </button>

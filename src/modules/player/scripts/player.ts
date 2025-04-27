@@ -21,6 +21,7 @@ export const player = {
   filter() {
     const activeTags: ITag[] = getMusicStore().tags.filter((tag: ITag) => tag.active)
     const activePlaylists: IPlaylist[] = getMusicStore().playlists.filter((playlist: IPlaylist) => playlist.active)
+
     getMusicStore().songsFiltered = getMusicStore().songs.filter((song: ISong) => {
       // Search
       let songTitle: string = song.title.toLowerCase()
@@ -52,6 +53,26 @@ export const player = {
       }
 
       return (includeTitle || includeArtist) && filterTags && inPlaylistActive
+    })
+
+    player.order()
+  },
+  order(desc: boolean = false) {
+    if (!getMusicStore().orderBy) return
+
+    getMusicStore().songsFiltered = getMusicStore().songsFiltered.sort((a: ISong, b: ISong) => {
+      const valueA = a[getMusicStore().orderBy]
+      const valueB = b[getMusicStore().orderBy]
+
+      let comparison = 0
+
+      if (getMusicStore().orderBy === 'date') {
+        comparison = (valueA as Date).getTime() - (valueB as Date).getTime()
+      } else {
+        comparison = (valueA as string).localeCompare(valueB as string, undefined, { sensitivity: 'base' })
+      }
+
+      return desc ? -comparison : comparison
     })
   },
   play(fileName: string, isHistory: boolean = false) {
