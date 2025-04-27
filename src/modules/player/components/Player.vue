@@ -32,12 +32,12 @@
 
     translate.value = 100 - progressPercentage
 
-    /*if (holding) progressChange()
+    //if (holding) progressChange()
 
-    const songOffset: number = musicStore.activeSong.howl.duration() - get(fadeTime)
+    const songOffset: number = musicStore.activeSong.howl.duration() - musicStore.fadeTime
 
-    if (get(djMode)) {
-      const endTime = (musicStore.activeSong.howl.duration() * get(djModeFinish)) / 100
+    if (musicStore.djMode) {
+      const endTime = (musicStore.activeSong.howl.duration() * musicStore.djModeFinish) / 100
 
       if (musicStore.activeSong.howl.seek() > endTime && !flag) {
         flag = true
@@ -48,7 +48,7 @@
       player.next()
     }
 
-    if (musicStore.activeSong.howl.seek() < songOffset) flag = false*/
+    if (musicStore.activeSong.howl.seek() < songOffset) flag = false
   }, 100)
 
   watch(
@@ -169,6 +169,7 @@
 
     button {
       padding: 0;
+      background-color: unset;
       border: none;
     }
   }

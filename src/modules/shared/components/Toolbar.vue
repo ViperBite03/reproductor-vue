@@ -25,6 +25,7 @@
 
     button {
       border: unset;
+      background-color: unset;
       padding: 0;
     }
   }
@@ -33,8 +34,17 @@
 <template>
   <div id="toolbar">
     <Search />
+
+    <button>
+      <Svg name="Filters" fill="transparent" stroke="var(--lilac)"></Svg>
+    </button>
+
+    <button>
+      <Svg name="SingleTag" fill="transparent" stroke="var(--lilac)"></Svg>
+    </button>
+
     <button @click="toggleSettings">
-      <Svg name="Groove"></Svg>
+      <Svg name="Settings" fill="transparent" stroke="var(--lilac)"></Svg>
     </button>
   </div>
 </template>

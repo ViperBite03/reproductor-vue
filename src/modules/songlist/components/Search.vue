@@ -13,11 +13,20 @@
   }
 </script>
 
-<style lang="scss">
-  .search-container {
+<style lang="scss" scoped>
+  .searcher-container {
+    position: relative;
+
+    input {
+      padding-left: 40px;
+    }
+
     .svg-container {
       position: absolute;
-      bottom: 0;
+      display: flex;
+      align-items: center;
+      margin-left: 10px;
+      height: 100%;
     }
   }
 </style>

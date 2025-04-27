@@ -12,8 +12,9 @@
 
   const songTitle: Ref<string> = ref('')
   const songArtist: Ref<string> = ref('')
-  const songVideoclip: Ref<string> = ref('')
   const songTags: Ref<string[]> = ref([])
+  const loadingMetaData: Ref<boolean> = ref(false)
+  const loadingMP3: Ref<boolean> = ref(false)
 
   const googleImages: Ref<string[]> = ref([])
   const googleImageSelected: Ref<string> = ref('')
@@ -21,21 +22,26 @@
   let scrapResult: IScrapData
 
   const getMetadataFromYT = async () => {
+    loadingMetaData.value = true
+
     scrapResult = await window.electron.ipcRenderer.invoke('scrap-song', youtubeURL.value)
 
     const { title, artist } = cleanYouTubeTitle(scrapResult.youtubeTitle, scrapResult.artist)
 
     songTitle.value = title
     songArtist.value = artist
-    songVideoclip.value = scrapResult.youtubeURL
 
     const googleSearch = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(`${artist}+${title}`)}&searchType=image&key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_GOOGLE_CX}`
     const imagesResult = await (await fetch(googleSearch)).json()
 
     googleImages.value = imagesResult.items.map((img) => img.link)
+
+    loadingMetaData.value = false
   }
 
   const saveSongAndMetadata = async () => {
+    loadingMP3.value = true
+
     const musicStore = useMusicStore()
     const fileName = `${songArtist.value} - ${songTitle.value}`
 
@@ -66,7 +72,14 @@
     musicStore.songs = [song, ...musicStore.songs]
     musicStore.songsFiltered = musicStore.songs
 
-    console.log(musicStore.songs)
+    //reset
+    songTitle.value = ''
+    songArtist.value = ''
+    youtubeURL.value = ''
+    googleImages.value = []
+    googleImageSelected.value = ''
+
+    loadingMP3.value = false
   }
 
   const selectImage = (newUrl: string) => {
@@ -76,6 +89,7 @@
 
 <style lang="scss" scoped>
   #add-song {
+    overflow-y: auto;
     .section {
       display: flex;
       flex-direction: column;
@@ -88,6 +102,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
       gap: 10px;
+      max-height: 200px;
+      overflow: scroll;
     }
 
     .google-image {
@@ -102,6 +118,10 @@
         transform: scale(0.9);
       }
     }
+
+    button {
+      width: 100%;
+    }
   }
 </style>
 
@@ -109,14 +129,16 @@
   <div id="add-song">
     <h2 class="g-title">ADD SONG</h2>
 
-    <h3>FASE 1: Descargar canción</h3>
     <div class="section">
       <input type="text" v-model="youtubeURL" placeholder="youtube url" />
-      <button @click="getMetadataFromYT">Obtener metadatos</button>
+      <button @click="getMetadataFromYT">
+        {{ loadingMetaData ? 'Sacando metadatos del ciberespacio...' : 'Obtener metadatos' }}
+      </button>
+    </div>
 
+    <div class="section">
       <input type="text" v-model="songTitle" placeholder="Título" />
       <input type="text" v-model="songArtist" placeholder="Artista" />
-      <input type="text" v-model="songVideoclip" placeholder="Videoclip URL (opcional)" />
     </div>
 
     <div class="section">
@@ -133,6 +155,6 @@
       <input type="text" v-model="googleImageSelected" placeholder="Image url" />
     </div>
 
-    <button @click="saveSongAndMetadata">Descargar canción</button>
+    <button @click="saveSongAndMetadata">{{ loadingMP3 ? 'Descargando...' : 'Descargar canción' }}</button>
   </div>
 </template>

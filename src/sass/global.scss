@@ -7,6 +7,7 @@ button {
   border: 1px solid var(--darkLilac);
   border-radius: var(--radius);
   padding: 10px 20px;
+  background-color: var(--darkLilac);
 
   &:hover {
     transform: scale(0.9);
@@ -20,6 +21,11 @@ input {
   border-radius: 50px;
   background-color: transparent;
   outline: none;
+
+  &::placeholder {
+    opacity: 0.5;
+    color: var(--lilac);
+  }
 
   &:focus {
     border: 1px solid var(--darkLilac);
