@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onMounted } from 'vue'
+  import { onMounted, ref, Ref } from 'vue'
   import { setAllSongs } from '@/modules/shared/scripts/generic'
 
   import Songlist from '@/modules/songlist/components/Songlist.vue'
@@ -11,6 +11,9 @@
   import { useMusicStore } from './modules/shared/constants/godStore'
 
   const musicStore = useMusicStore()
+  let bg: Ref<string> = ref(
+    'https://preview.redd.it/abstract-wallpaper-bundle-13-v0-g9z6vphde1le1.jpg?width=1080&crop=smart&auto=webp&s=475687a2a51af63558c09d9b80a2a3d768560ada'
+  )
 
   const getSettings = () => {
     musicStore.volume = Number(JSON.parse(window.localStorage.getItem('volume') || '""')) || musicStore.volume
@@ -43,7 +46,7 @@
 
     display: grid;
     grid-template-columns: 0px 1fr 350px;
-    grid-template-rows: 70px 220px 1fr 1fr 1fr;
+    grid-template-rows: 70px 220px;
 
     &.openLeftPanel {
       grid-template-columns: 320px 1fr 350px;
@@ -71,6 +74,8 @@
       min-width: 0;
       min-height: 0;
 
+      //border: 0.5px solid red;
+
       &:not(.settings-container, .songs-container) {
         padding: 20px;
       }
@@ -88,7 +93,7 @@
     }
 
     .player-container {
-      grid-row: span 2;
+      grid-row: span 3;
     }
 
     .songs-container {
@@ -99,7 +104,12 @@
 
 <template>
   <div id="grid-container" :class="{ openLeftPanel: musicStore.panel }">
-    <div class="bg" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>
+    <div
+      class="bg"
+      :style="{
+        'background-image': `url('${musicStore.activeSong.howl ? musicStore.activeSong.cover : bg}')`,
+      }"
+    ></div>
 
     <div class="container settings-container">
       <SettingsPanel v-show="musicStore.panel" />

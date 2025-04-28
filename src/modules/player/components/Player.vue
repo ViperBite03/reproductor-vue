@@ -71,7 +71,7 @@
     width: 100%;
     padding: 25px;
 
-    background-color: var(--lilac);
+    background-color: var(--colorSecondary);
     border-radius: var(--maxRadius);
 
     display: flex;
@@ -79,7 +79,7 @@
     justify-content: space-between;
     align-items: center;
 
-    box-shadow: 0px 10px 29px -14px var(--darkLilac);
+    //box-shadow: 0px 10px 29px -14px var(--colorSecondary);
 
     .cover {
       overflow: hidden;
@@ -121,14 +121,15 @@
 
         .progress {
           height: 5px;
-          background-color: var(--darkLilac);
+          background-color: var(--colorPrimary);
         }
       }
 
       .actual-time,
       .total-time {
         color: var(--colorText);
-        width: 35px;
+        min-width: 35px;
+        text-align: center;
       }
     }
 
@@ -195,13 +196,13 @@
     </div>
 
     <div class="player-buttons">
-      <button @click="player.updateSlowed" :class="{ activeX: musicStore.rate < 1 }" class="canActive">
-        <Svg name="Metronome" height="30" width="30" stroke="var(--colorText)" fill="var(--transparent)"></Svg>
+      <button @click="player.updateSlowed()" :class="{ activeX: musicStore.rate < 1 }" class="canActive">
+        <Svg name="Metronome" height="30" width="30" stroke="var(--colorText)" fill="transparent"></Svg>
         <div class="under-bar"></div>
       </button>
 
       <button class="before btn" @click="player.back">
-        <Svg name="Back" fill="var(--transparent)" stroke="var(--colorText)"></Svg>
+        <Svg name="Back" fill="transparent" stroke="var(--colorText)"></Svg>
       </button>
 
       <button class="play btn" ref="play" @click="togglePlay">
@@ -214,7 +215,7 @@
       </button>
 
       <button class="after btn" @click="player.forth">
-        <Svg name="Forward" fill="var(--transparent)" stroke="var(--colorText)"></Svg>
+        <Svg name="Forward" fill="transparent" stroke="var(--colorText)"></Svg>
       </button>
 
       <button @click="player.updateNightcore" :class="{ activeX: musicStore.rate > 1 }" class="canActive">

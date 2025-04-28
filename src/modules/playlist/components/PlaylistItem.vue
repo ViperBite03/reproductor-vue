@@ -38,7 +38,7 @@
     <div class="details">
       <div class="name">Ricochet</div>
       <div class="total-songs">
-        <Svg name="Music" height="13" width="13" fill="var(--transparent)" style="margin-top: 2px"></Svg>
+        <Svg name="Music" height="13" width="13" fill="transparent" style="margin-top: 2px"></Svg>
         <span>157</span>
       </div>
     </div>

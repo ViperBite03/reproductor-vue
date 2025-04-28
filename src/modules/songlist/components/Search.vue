@@ -33,7 +33,7 @@
 
 <template>
   <div class="searcher-container">
-    <Svg name="Search" fill="transparent" stroke="var(--lilac)"> </Svg>
+    <Svg name="Search" fill="transparent" stroke="var(--colorPrimary)"> </Svg>
     <input type="text" placeholder="Type here" class="search" v-model="searchValue" @input="updateGlobalSearch" />
   </div>
 </template>

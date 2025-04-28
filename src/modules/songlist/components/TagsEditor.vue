@@ -61,7 +61,7 @@
       .warning {
         position: absolute;
         font-size: 10px;
-        color: var(--lilac);
+        color: var(--colorPrimary);
       }
     }
   }
@@ -80,7 +80,7 @@
         </div>
 
         <button @click="(ev) => createTag(ev)">
-          <Svg name="AddTag" fill="var(--transparent)" stroke="var(--colorText)"></Svg>
+          <Svg name="AddTag" fill="transparent" stroke="var(--colorText)"></Svg>
         </button>
       </div>
 
@@ -90,7 +90,7 @@
         </div>
 
         <button @click="(ev) => createTag(ev)">
-          <Svg name="Trash" fill="var(--transparent)" stroke="var(--colorText)"></Svg>
+          <Svg name="Trash" fill="transparent" stroke="var(--colorText)"></Svg>
         </button>
       </div>
     </div>
