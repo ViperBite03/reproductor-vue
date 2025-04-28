@@ -5,7 +5,7 @@
   import type { ISongMetadata } from '@/modules/backend/interfaces/ISongMetadata'
   import { ISong } from '@/modules/player/interfaces/ISong'
   import { useMusicStore } from '@/modules/shared/constants/godStore'
-  import { ITag } from '@/modules/player/interfaces/ITag'
+  import InputTag from '@/modules/shared/components/InputTag.vue'
 
   const youtubeURL = ref('')
 
@@ -193,6 +193,8 @@
           {{ tag.name }}
         </div>
       </div>
+
+      <InputTag />
     </div>
 
     <button @click="saveSongAndMetadata">{{ loadingMP3 ? 'Descargando...' : 'Descargar canción' }}</button>
