@@ -107,10 +107,10 @@
 
     <div class="buttons">
       <button @click="toggleSongEditor">
-        <Svg name="Settings" fill="transparent" stroke="var(--lilac)"></Svg>
+        <Svg name="Settings" fill="transparent" stroke="var(--colorPrimary)"></Svg>
       </button>
       <button>
-        <Svg name="Settings" fill="transparent" stroke="var(--lilac)"></Svg>
+        <Svg name="Settings" fill="transparent" stroke="var(--colorPrimary)"></Svg>
       </button>
     </div>
   </div>

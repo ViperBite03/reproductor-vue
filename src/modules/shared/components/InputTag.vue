@@ -53,7 +53,7 @@
     .warning {
       position: absolute;
       font-size: 10px;
-      color: var(--lilac);
+      color: var(--colorPrimary);
     }
   }
 </style>
