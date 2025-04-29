@@ -249,4 +249,12 @@ export const player = {
 
     return ''
   },
+  removeTag(tagNameToRemove: string) {
+    const tags: ITag[] = JSON.parse(window.localStorage.getItem('tags'))
+    const newTags: ITag[] = tags.filter((tag: ITag) => tag.name != tagNameToRemove)
+
+    getMusicStore().tags = newTags
+    window.localStorage.setItem('tags', JSON.stringify(newTags))
+    player.filter()
+  },
 }

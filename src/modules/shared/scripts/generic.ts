@@ -42,3 +42,18 @@ export const setAllSongs = async () => {
   musicStore.orderBy = 'artist'
   player.order()
 }
+
+export const setColor = (hexColor: string): string => {
+  if (hexColor.startsWith('#')) hexColor = hexColor.slice(1)
+
+  const r = parseInt(hexColor.substring(0, 2), 16) / 255
+  const g = parseInt(hexColor.substring(2, 4), 16) / 255
+  const b = parseInt(hexColor.substring(4, 6), 16) / 255
+
+  const adjust = (c) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4))
+
+  const L = 0.2126 * adjust(r) + 0.7152 * adjust(g) + 0.0722 * adjust(b)
+  const contrastWithWhite = 1.05 / (L + 0.05)
+
+  return contrastWithWhite < 2 ? 'black' : 'white'
+}

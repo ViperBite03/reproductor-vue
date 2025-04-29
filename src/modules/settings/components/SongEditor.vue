@@ -4,6 +4,7 @@
   import { useMusicStore } from '@/modules/shared/constants/godStore'
   import InputTag from '@/modules/shared/components/InputTag.vue'
   import { ref, Ref, watch } from 'vue'
+  import { setColor } from '@/modules/shared/scripts/generic'
 
   const musicStore = useMusicStore()
 
@@ -108,7 +109,7 @@
             class="g-tag"
             v-for="tag in musicStore.tags"
             :class="{ active: selectedTags.includes(tag.name) }"
-            :style="{ 'background-color': tag.color }"
+            :style="{ 'background-color': tag.color, color: setColor(tag.color), color: setColor(tag.color) }"
             @click="() => toggleTag(tag.name)"
           >
             {{ tag.name }}

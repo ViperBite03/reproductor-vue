@@ -34,6 +34,7 @@
 </script>
 
 <style lang="scss">
+  @use '/src/sass/mixins.scss' as *;
   @use '@/sass/global';
 
   #grid-container {
@@ -46,10 +47,10 @@
 
     display: grid;
     grid-template-columns: 0px 1fr 350px;
-    grid-template-rows: 70px 220px;
+    grid-template-rows: 70px 250px;
 
     &.openLeftPanel {
-      grid-template-columns: 320px 1fr 350px;
+      grid-template-columns: 350px 1fr 350px;
 
       .settings-container {
         padding: 20px;
@@ -89,7 +90,7 @@
     }
 
     .queue-container {
-      grid-row: span 3;
+      grid-row: span 2;
     }
 
     .player-container {
@@ -98,6 +99,18 @@
 
     .songs-container {
       grid-row: span 3;
+    }
+
+    @include microDevice {
+      display: block;
+
+      .container {
+        display: none;
+      }
+
+      .player-container {
+        display: block;
+      }
     }
   }
 </style>

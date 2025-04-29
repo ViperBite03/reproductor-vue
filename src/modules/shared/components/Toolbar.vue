@@ -7,6 +7,7 @@
   import type { IOrderOptions, IDropdownOptions } from '@/modules/shared/interfaces/IToolbarOptions'
   import { ref, Ref } from 'vue'
   import { player } from '@/modules/player/scripts/player'
+  import { setColor } from '@/modules/shared/scripts/generic'
 
   const musicStore = useMusicStore()
 
@@ -79,10 +80,11 @@
     .dropdown {
       position: absolute;
       border-radius: var(--radius);
-      background-color: var(--colorPrimary);
+      background-color: var(--colorSecondary);
+      backdrop-filter: blur(20px);
       padding: 20px;
       top: 70px;
-      width: 300px;
+      width: 400px;
       z-index: 3;
 
       .g-title {
@@ -155,7 +157,7 @@
           class="g-tag"
           v-for="tag in musicStore.tags"
           :class="{ active: tag.active }"
-          :style="{ 'background-color': tag.color }"
+          :style="{ 'background-color': tag.color, color: setColor(tag.color) }"
           @click="() => toggleTag(tag.name)"
         >
           {{ tag.name }}

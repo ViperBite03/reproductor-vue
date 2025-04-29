@@ -2,6 +2,8 @@
   import InputTag from '@/modules/shared/components/InputTag.vue'
   import Svg from '@/modules/shared/components/Svg.vue'
   import { useMusicStore } from '@/modules/shared/constants/godStore'
+  import { player } from '@/modules/player/scripts/player'
+  import { setColor } from '@/modules/shared/scripts/generic'
 
   const musicStore = useMusicStore()
 </script>
@@ -9,6 +11,8 @@
 <style lang="scss" scoped>
   #tags-editor {
     position: relative;
+    overflow-y: auto;
+    height: 100%;
 
     .tag-editor-list {
       display: flex;
@@ -35,11 +39,11 @@
       <InputTag />
 
       <div class="row" v-for="tag in musicStore.tags">
-        <div class="g-tag active" :style="{ 'background-color': tag.color }">
+        <div class="g-tag active" :style="{ 'background-color': tag.color, color: setColor(tag.color) }">
           {{ tag.name }}
         </div>
 
-        <button>
+        <button @click="() => player.removeTag(tag.name)">
           <Svg name="Trash" fill="transparent" stroke="var(--colorText)"></Svg>
         </button>
       </div>

@@ -52,6 +52,10 @@ input {
   width: 100%;
   border-radius: var(--radius);
 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   opacity: 0.4;
   transform: scale(0.9);
 

@@ -13,7 +13,7 @@ $breakpoint: 1200px;
 }
 
 @mixin microDevice {
-  @media (max-width: 374px) {
+  @media (max-width: 600px) {
     @content;
   }
 }
