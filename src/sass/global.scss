@@ -4,10 +4,10 @@
 
 button {
   transition: 0.3s ease;
-  border: 1px solid var(--darkLilac);
+  border: 1px solid var(--colorSecondary);
   border-radius: var(--radius);
   padding: 10px 20px;
-  background-color: var(--darkLilac);
+  background-color: var(--colorSecondary);
 
   &.active {
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 1);
@@ -20,7 +20,7 @@ button {
 
 input {
   transition: 0.3s ease;
-  border: 1px solid var(--lilac);
+  border: 1px solid var(--colorPrimary);
   padding: 10px;
   border-radius: 50px;
   background-color: transparent;
@@ -28,11 +28,11 @@ input {
 
   &::placeholder {
     opacity: 0.5;
-    color: var(--lilac);
+    color: var(--colorPrimary);
   }
 
   &:focus {
-    border: 1px solid var(--darkLilac);
+    border: 1px solid var(--colorSecondary);
   }
 }
 

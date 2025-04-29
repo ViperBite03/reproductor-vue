@@ -79,7 +79,7 @@
     .dropdown {
       position: absolute;
       border-radius: var(--radius);
-      background-color: var(--lilac);
+      background-color: var(--colorPrimary);
       padding: 20px;
       top: 70px;
       width: 300px;
@@ -122,7 +122,7 @@
     <Search />
 
     <button class="tool" @click="() => toggleDropdown('filters')">
-      <Svg name="Filters" fill="transparent" stroke="var(--lilac)"></Svg>
+      <Svg name="Filters" fill="transparent" stroke="var(--colorPrimary)"></Svg>
     </button>
 
     <div class="dropdown filters" v-if="currentDropdown === 'filters'">
@@ -144,7 +144,7 @@
     </div>
 
     <button class="tool" @click="() => toggleDropdown('tags')">
-      <Svg name="SingleTag" fill="transparent" stroke="var(--lilac)"></Svg>
+      <Svg name="SingleTag" fill="transparent" stroke="var(--colorPrimary)"></Svg>
     </button>
 
     <div class="dropdown filters" v-if="currentDropdown === 'tags'">
@@ -166,7 +166,7 @@
     </div>
 
     <button class="tool" @click="toggleSettings">
-      <Svg name="Settings" fill="transparent" stroke="var(--lilac)"></Svg>
+      <Svg name="Settings" fill="transparent" stroke="var(--colorPrimary)"></Svg>
     </button>
   </div>
 </template>

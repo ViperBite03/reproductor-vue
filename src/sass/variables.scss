@@ -1,8 +1,8 @@
 @use 'src/sass/mixins.scss' as *;
 
 :root {
-  --lilac: #d19df0; //#567c8d;
-  --darkLilac: #421059; //#2f4156;
+  --colorPrimary: #d19df0; //#567c8d;
+  --colorSecondary: #000000a4; //#2f4156;
   --colorAccent: #c6da54; //#f5edeb;
   --colorNeutral: #09080e; //#c8d9e6;
 
@@ -14,8 +14,6 @@
   --colorText2: #627472;
   --colorText3: #1c1c28;
 
-  --transparent: #00000000;
-
   --maxRadius: 15px;
   --radius: 10px;
 
@@ -25,8 +23,8 @@
 
 .dark-mode {
   --colorNeutral: #121212; // #282828
-  --darkLilac: #282828;
-  --darkLilac2: #3f3f3f;
+  --colorSecondary: #282828;
+  --colorSecondary2: #3f3f3f;
   --colorBorder: rgba(255, 255, 255, 0.2);
   --colorText: #f3f3f3;
   --colorText2: #adadad;

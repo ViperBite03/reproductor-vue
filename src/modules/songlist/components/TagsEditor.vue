@@ -40,7 +40,7 @@
         </div>
 
         <button>
-          <Svg name="Trash" fill="var(--transparent)" stroke="var(--colorText)"></Svg>
+          <Svg name="Trash" fill="transparent" stroke="var(--colorText)"></Svg>
         </button>
       </div>
     </div>
