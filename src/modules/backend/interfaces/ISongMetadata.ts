@@ -5,6 +5,6 @@ export type ISongMetadata = {
   extraData: {
     tags: string[]
     cover: string
-    videoclip?: string
+    video?: string
   }
 }

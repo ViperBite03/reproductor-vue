@@ -54,6 +54,7 @@
 
       .settings-container {
         padding: 20px;
+        padding-right: 0;
         opacity: 1;
       }
     }

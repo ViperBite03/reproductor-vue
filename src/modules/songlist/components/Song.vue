@@ -14,6 +14,8 @@
       return
     }
 
+    musicStore.editingSong = props.song
+
     musicStore.panel = PANEL_OPTIONS.songEditor
   }
 </script>

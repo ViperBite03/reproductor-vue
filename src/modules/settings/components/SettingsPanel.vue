@@ -20,6 +20,6 @@
     <AddSong v-if="musicStore.panel === PANEL_OPTIONS.addSong" />
     <Settings v-if="musicStore.panel === PANEL_OPTIONS.settings" />
     <TagsEditor v-if="musicStore.panel === PANEL_OPTIONS.tagEditor" />
-    <SongEditor v-if="musicStore.panel === PANEL_OPTIONS.songEditor" />
+    <SongEditor v-show="musicStore.panel === PANEL_OPTIONS.songEditor" />
   </div>
 </template>

@@ -8,12 +8,11 @@
 
   const musicStore = useMusicStore()
 
-  const song = musicStore.songs.find((song: ISong) => song.fileName === musicStore.fileNameEditingSong)
-
-  const title: Ref<string> = ref('')
-  const artist: Ref<string> = ref('')
-  const cover: Ref<string> = ref('')
-  const selectedTags: Ref<string[]> = ref([])
+  let title: Ref<string> = ref('')
+  let artist: Ref<string> = ref('')
+  let cover: Ref<string> = ref('')
+  let video: Ref<string> = ref('')
+  let selectedTags: Ref<string[]> = ref([])
 
   const loading: Ref<boolean> = ref(false)
 
@@ -27,10 +26,13 @@
       extraData: {
         tags: [...selectedTags.value],
         cover: cover.value,
+        video: video.value,
       },
     }
 
-    await window.electron.ipcRenderer.invoke('write-metadata', metadata, musicStore.fileNameEditingSong)
+    console.log(metadata)
+
+    await window.electron.ipcRenderer.invoke('write-metadata', metadata, musicStore.editingSong)
 
     loading.value = false
   }
@@ -44,11 +46,24 @@
     selectedTags.value = [...selectedTags.value, tagName]
   }
 
-  watch(song, () => {})
+  watch(
+    () => musicStore.editingSong,
+    () => {
+      title.value = musicStore.editingSong.title
+      artist.value = musicStore.editingSong.artist
+      cover.value = musicStore.editingSong.cover
+      video.value = musicStore.editingSong.video
+      selectedTags.value = musicStore.editingSong.tags
+    }
+  )
 </script>
 
 <style lang="scss" scoped>
   #song-editor {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 20px;
+
     .fields {
       .section {
         display: flex;
@@ -62,6 +77,11 @@
           aspect-ratio: 1;
           background-color: rgba(0, 0, 0, 0.2);
           border-radius: var(--radius);
+
+          overflow: hidden;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: cover;
         }
 
         .tag-list {
@@ -99,8 +119,11 @@
       </div>
 
       <div class="section">
-        <div class="image-preview"></div>
-        <input type="text" placeholder="Image URL" />
+        <div
+          class="image-preview"
+          :style="{ 'background-image': `url(${musicStore.editingSong ? musicStore.editingSong.cover : ''})` }"
+        ></div>
+        <input type="text" v-model="cover" placeholder="Image URL" />
       </div>
 
       <div class="section">
@@ -109,7 +132,7 @@
             class="g-tag"
             v-for="tag in musicStore.tags"
             :class="{ active: selectedTags.includes(tag.name) }"
-            :style="{ 'background-color': tag.color, color: setColor(tag.color), color: setColor(tag.color) }"
+            :style="{ 'background-color': tag.color, color: setColor(tag.color) }"
             @click="() => toggleTag(tag.name)"
           >
             {{ tag.name }}
