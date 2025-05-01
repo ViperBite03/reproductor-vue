@@ -3,4 +3,6 @@ export const PANEL_OPTIONS = Object.freeze({
   settings: 'settings',
   tagEditor: 'tag-editor',
   songEditor: 'song-editor',
+  addPlaylist: 'add-playlist',
+  playlistEditor: 'playlist-editor',
 })
