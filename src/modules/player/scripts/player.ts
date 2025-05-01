@@ -257,4 +257,9 @@ export const player = {
     window.localStorage.setItem('tags', JSON.stringify(newTags))
     player.filter()
   },
+  getTagColor(tagName: string): string {
+    const tag: ITag = getMusicStore().tags.find((tag: ITag) => tag.name === tagName)
+
+    return tag.color
+  },
 }

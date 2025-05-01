@@ -51,6 +51,7 @@
       width: 100%;
       display: flex;
       justify-content: right;
+      gap: 10px;
 
       .g-tag {
         width: fit-content;
@@ -101,16 +102,22 @@
       </div>
 
       <div class="tags">
-        <div class="g-tag">Rock</div>
+        <div
+          class="g-tag active"
+          :style="{ 'background-color': player.getTagColor(tagName) }"
+          v-for="tagName in props.song.tags"
+        >
+          {{ tagName }}
+        </div>
       </div>
     </div>
 
     <div class="buttons">
-      <button @click="toggleSongEditor">
-        <Svg name="Settings" fill="transparent" stroke="var(--colorPrimary)"></Svg>
-      </button>
       <button>
-        <Svg name="Settings" fill="transparent" stroke="var(--colorPrimary)"></Svg>
+        <Svg name="AddQueue" fill="transparent" stroke="var(--colorPrimary)"></Svg>
+      </button>
+      <button @click="toggleSongEditor">
+        <Svg name="Edit" fill="transparent" stroke="var(--colorPrimary)" width="20" height="20"></Svg>
       </button>
     </div>
   </div>

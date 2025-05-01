@@ -1,6 +1,8 @@
-export type SvgStore = {AddTag: string
+export type SvgStore = {AddQueue: string
+AddTag: string
 Back: string
 CopyAdd: string
+Edit: string
 Filters: string
 FolderAdd: string
 Forward: string
