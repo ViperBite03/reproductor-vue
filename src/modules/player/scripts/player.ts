@@ -262,4 +262,10 @@ export const player = {
 
     return tag.color
   },
+  deleteSong() {
+    //Quitar del objeto songs
+    //Quitar del objeto songsFiltered (si está)
+    //Sobreescribir el localstorage
+    //Borrar el mp3
+  },
 }

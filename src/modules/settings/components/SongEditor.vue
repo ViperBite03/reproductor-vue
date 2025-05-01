@@ -5,6 +5,7 @@
   import InputTag from '@/modules/shared/components/InputTag.vue'
   import { ref, Ref, watch } from 'vue'
   import { setColor } from '@/modules/shared/scripts/generic'
+  import Svg from '@/modules/shared/components/Svg.vue'
 
   const musicStore = useMusicStore()
 
@@ -30,9 +31,9 @@
       },
     }
 
-    console.log(metadata)
-
     await window.electron.ipcRenderer.invoke('write-metadata', metadata, musicStore.editingSong)
+
+    console.log(metadata)
 
     loading.value = false
   }
@@ -104,6 +105,12 @@
           width: 100%;
         }
       }
+
+      .buttons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
     }
   }
 </style>
@@ -142,7 +149,12 @@
         <InputTag />
       </div>
 
-      <button @click="updateSong">{{ loading ? 'Actualizando...' : 'Actualizar' }}</button>
+      <div class="buttons">
+        <button @click="updateSong">{{ loading ? 'Actualizando...' : 'Actualizar' }}</button>
+        <button @click="">
+          <Svg name="Trash" fill="transparent" stroke="var(--colorText)" height="20" width="20"></Svg>
+        </button>
+      </div>
     </div>
   </div>
 </template>
