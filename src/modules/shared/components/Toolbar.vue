@@ -2,10 +2,11 @@
   import { useMusicStore } from '@/modules/shared/constants/godStore'
   import { PANEL_OPTIONS } from '@/modules/settings/constants/settings'
   import Svg from '@/modules/shared/components/Svg.vue'
+  import Switch from '@/modules/shared/components/Switch.vue'
   import Search from '@/modules/songlist/components/Search.vue'
   import type { ITag } from '@/modules/player/interfaces/ITag'
   import type { IOrderOptions, IDropdownOptions } from '@/modules/shared/interfaces/IToolbarOptions'
-  import { ref, Ref } from 'vue'
+  import { onBeforeUnmount, onMounted, ref, Ref } from 'vue'
   import { player } from '@/modules/player/scripts/player'
   import { setColor } from '@/modules/shared/scripts/generic'
 
@@ -13,6 +14,7 @@
 
   const currentDropdown: Ref<string> = ref('')
   const isOrderDesc: Ref<boolean> = ref(false)
+  const HTMLToolbar = ref(null)
 
   const toggleSettings = () => {
     if (musicStore.panel === PANEL_OPTIONS.settings) {
@@ -62,9 +64,24 @@
 
     player.filter()
   }
+
+  const handleClickOutside = (event) => {
+    const isSearch = event.target.classList.value === 'search'
+    if ((HTMLToolbar.value && !HTMLToolbar.value.contains(event.target)) || isSearch) {
+      currentDropdown.value = ''
+    }
+  }
+
+  onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
+  })
+
+  onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside)
+  })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   #toolbar {
     display: flex;
     width: 100%;
@@ -115,22 +132,38 @@
           grid-column: span 2;
         }
       }
+
+      .switch-container {
+        display: flex;
+        align-items: center;
+        width: fit-content;
+        padding-bottom: 20px;
+        gap: 10px;
+
+        span {
+          width: fit-content;
+        }
+      }
     }
   }
 </style>
 
 <template>
-  <div id="toolbar">
+  <div id="toolbar" ref="HTMLToolbar">
     <Search />
 
     <button class="tool" @click="() => toggleDropdown('filters')">
       <Svg name="Filters" fill="transparent" stroke="var(--colorPrimary)"></Svg>
     </button>
 
-    <div class="dropdown filters" v-if="currentDropdown === 'filters'">
+    <div class="dropdown filters" v-show="currentDropdown === 'filters'">
       <h2 class="g-title">Filtros</h2>
-      <h2 class="g-title">Ordenar por</h2>
+      <div class="buttons">
+        <button>Repre</button>
+        <button>No tags</button>
+      </div>
 
+      <h2 class="g-title" style="padding-top: 40px">Ordenar por</h2>
       <div class="buttons">
         <button :class="{ active: musicStore.orderBy === 'title' }" @click="() => toggleOrder('title')">Título</button>
         <button :class="{ active: musicStore.orderBy === 'artist' }" @click="() => toggleOrder('artist')">
@@ -151,6 +184,12 @@
 
     <div class="dropdown filters" v-if="currentDropdown === 'tags'">
       <h2 class="g-title">Filter Tags</h2>
+
+      <div class="switch-container">
+        <span>Todos</span>
+        <Switch v-model="musicStore.tagsSwitch" />
+        <span>Al menos uno</span>
+      </div>
 
       <div class="tag-list">
         <div
