@@ -95,3 +95,16 @@ export const getSongFileNames = async () => {
 
   return await fs.readdirSync(directoryPath)
 }
+
+export const deleteFile = async (fileName: string) => {
+  const path = await process.cwd()
+  const songPath = `${path}/music/${fileName}`
+
+  fs.unlink(songPath, (err) => {
+    if (err) {
+      console.error('An error occurred:', err)
+    } else {
+      console.log('File deleted successfully!')
+    }
+  })
+}

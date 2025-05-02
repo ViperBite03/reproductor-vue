@@ -29,6 +29,7 @@
     musicStore.tags = JSON.parse(window.localStorage.getItem('tags') || '[]')
     musicStore.playlists = JSON.parse(window.localStorage.getItem('playlists') || '[]')
     getSettings()
+
     await setAllSongs()
   })
 </script>

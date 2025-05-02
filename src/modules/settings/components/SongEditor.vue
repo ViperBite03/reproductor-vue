@@ -31,11 +31,25 @@
       },
     }
 
-    await window.electron.ipcRenderer.invoke('write-metadata', metadata, musicStore.editingSong)
-
     console.log(metadata)
 
+    await window.electron.ipcRenderer.invoke('write-metadata', metadata, musicStore.editingSong)
+
     loading.value = false
+  }
+
+  const deleteSong = async () => {
+    await window.electron.ipcRenderer.invoke('delete-file', musicStore.editingSong.fileName)
+
+    //Quitar del objeto songs
+    musicStore.songs = musicStore.songs.filter((song: ISong) => song.fileName != musicStore.editingSong.fileName)
+
+    //Quitar del objeto songsFiltered (si está)
+    musicStore.songsFiltered = musicStore.songsFiltered.filter(
+      (song: ISong) => song.fileName != musicStore.editingSong.fileName
+    )
+
+    musicStore.editingSong = {} as ISong
   }
 
   const toggleTag = (tagName: string) => {
@@ -138,7 +152,7 @@
           <div
             class="g-tag"
             v-for="tag in musicStore.tags"
-            :class="{ active: selectedTags.includes(tag.name) }"
+            :class="{ active: selectedTags?.includes(tag.name) }"
             :style="{ 'background-color': tag.color, color: setColor(tag.color) }"
             @click="() => toggleTag(tag.name)"
           >
@@ -151,7 +165,7 @@
 
       <div class="buttons">
         <button @click="updateSong">{{ loading ? 'Actualizando...' : 'Actualizar' }}</button>
-        <button @click="">
+        <button @click="deleteSong">
           <Svg name="Trash" fill="transparent" stroke="var(--colorText)" height="20" width="20"></Svg>
         </button>
       </div>

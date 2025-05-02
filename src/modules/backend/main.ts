@@ -9,6 +9,7 @@ import {
   writeMetaData,
   readMetaData,
   getSongFileNames,
+  deleteFile,
 } from '@/modules/backend/scripts/youtubeToMp3'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -69,6 +70,7 @@ app.on('window-all-closed', () => {
 
 ipcMain.handle('scrap-song', async (_, youtubeUrl): Promise<IScrapData> => scrapSong(youtubeUrl))
 ipcMain.handle('download-file', async (_, youtubeUrl, fileName) => downloadFile(youtubeUrl, fileName))
+ipcMain.handle('delete-file', async (_, fileName) => deleteFile(fileName))
 ipcMain.handle('write-metadata', async (_, metadata, fileName) => writeMetaData(metadata, fileName))
 ipcMain.handle('read-metadata', async (_, fileName) => readMetaData(fileName))
 ipcMain.handle('get-song-file-names', getSongFileNames)

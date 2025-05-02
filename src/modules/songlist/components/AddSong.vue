@@ -69,6 +69,7 @@
       tags: metadata.extraData.tags,
       date: new Date(metadata.date),
       cover: metadata.extraData.cover || '',
+      video: metadata.extraData.video,
       lyrics: '',
     }
 

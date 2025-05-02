@@ -29,7 +29,7 @@ export const useMusicStore = defineStore('music', {
     fadeTime: 5,
     loop: false,
     shuffle: false,
-    editingSong: null,
+    editingSong: null as ISong,
 
     orderBy: '',
     filterBy: '',
