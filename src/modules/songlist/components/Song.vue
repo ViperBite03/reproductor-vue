@@ -10,14 +10,12 @@
   const props = defineProps(['song'])
 
   const toggleSongEditor = () => {
-    if (musicStore.panel === PANEL_OPTIONS.songEditor) {
-      musicStore.panel = ''
-      return
-    }
-
     musicStore.editingSong = props.song
-
     musicStore.panel = PANEL_OPTIONS.songEditor
+  }
+
+  const addSongToQueue = () => {
+    musicStore.queue.push(props.song)
   }
 </script>
 
@@ -32,6 +30,10 @@
     align-items: center;
     border-radius: var(--radius);
     gap: 10px;
+
+    &.playing {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.5);
@@ -122,7 +124,11 @@
 </style>
 
 <template>
-  <div class="song-container" v-if="props.song">
+  <div
+    class="song-container"
+    :class="{ playing: musicStore.activeSong.fileName === props.song.fileName }"
+    v-if="props.song"
+  >
     <div class="play-zone" @click="() => player.play(props.song.fileName)">
       <div class="cover g-shadow" :style="{ 'background-image': `url('${props.song.cover}')` }"></div>
 
@@ -143,7 +149,7 @@
     </div>
 
     <div class="buttons">
-      <button>
+      <button @click="addSongToQueue">
         <Svg name="AddQueue" fill="transparent" stroke="var(--colorPrimary)"></Svg>
       </button>
       <button @click="toggleSongEditor">

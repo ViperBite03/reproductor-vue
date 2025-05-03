@@ -6,6 +6,7 @@
   import { ref, Ref, watch } from 'vue'
   import { setColor } from '@/modules/shared/scripts/generic'
   import Svg from '@/modules/shared/components/Svg.vue'
+  import { player } from '@/modules/player/scripts/player'
 
   const musicStore = useMusicStore()
 
@@ -23,7 +24,7 @@
     const metadata: ISongMetadata = {
       title: title.value,
       artist: artist.value,
-      date: new Date().toISOString(),
+      date: musicStore.editingSong.date.toISOString(),
       extraData: {
         tags: [...selectedTags.value],
         cover: cover.value,
@@ -31,11 +32,19 @@
       },
     }
 
-    console.log(metadata)
-
-    await window.electron.ipcRenderer.invoke('write-metadata', metadata, musicStore.editingSong)
+    await window.electron.ipcRenderer.invoke('write-metadata', metadata, musicStore.editingSong.fileName)
 
     loading.value = false
+
+    const index = musicStore.songs.findIndex((song: ISong) => song.fileName === musicStore.editingSong.fileName)
+    musicStore.songs[index].title = title.value
+    musicStore.songs[index].artist = artist.value
+    musicStore.songs[index].cover = cover.value
+    musicStore.songs[index].tags = [...selectedTags.value]
+
+    musicStore.activeSong = musicStore.songs[index]
+
+    player.filter()
   }
 
   const deleteSong = async () => {
@@ -124,6 +133,10 @@
         display: flex;
         gap: 5px;
         align-items: center;
+
+        button:nth-child(1) {
+          width: 100%;
+        }
       }
     }
   }
@@ -140,10 +153,7 @@
       </div>
 
       <div class="section">
-        <div
-          class="image-preview"
-          :style="{ 'background-image': `url(${musicStore.editingSong ? musicStore.editingSong.cover : ''})` }"
-        ></div>
+        <div class="image-preview" :style="{ 'background-image': `url(${cover}})` }"></div>
         <input type="text" v-model="cover" placeholder="Image URL" />
       </div>
 

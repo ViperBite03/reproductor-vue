@@ -34,7 +34,7 @@
 
 <template>
   <div class="songlist">
-    <Song v-for="song in musicStore.songsFiltered" :key="song.id" :song="song"> </Song>
+    <Song v-for="song in musicStore.songsFiltered" :key="song.fileName" :song="song"> </Song>
   </div>
 
   <button class="add-song" @click="toggleAddSong">+</button>

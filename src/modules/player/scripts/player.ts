@@ -113,6 +113,7 @@ export const player = {
           cover: song.cover,
           lyrics: song.lyrics,
           date: song.date,
+          video: song.video,
           howl,
         }
 

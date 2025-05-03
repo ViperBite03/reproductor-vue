@@ -81,30 +81,30 @@
       width: fit-content;
       gap: 10px;
       padding-top: 21px;
+    }
 
-      .canActive {
-        background-color: unset;
-        border: none;
-        padding: 0;
+    .can-active {
+      background-color: unset;
+      border: none;
+      padding: 0;
 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
-        gap: 3px;
+      gap: 3px;
 
+      .under-bar {
+        height: 3px;
+        width: 0;
+        background-color: var(--colorText);
+        border-radius: var(--maxRadius);
+        transition: 0.3s;
+      }
+
+      &.activeX {
         .under-bar {
-          height: 3px;
-          width: 0;
-          background-color: var(--colorText);
-          border-radius: var(--maxRadius);
-          transition: 0.3s;
-        }
-
-        &.activeX {
-          .under-bar {
-            width: 10px;
-          }
+          width: 10px;
         }
       }
     }
@@ -197,17 +197,17 @@
 <template>
   <div id="player">
     <div class="button-bar">
-      <button @click="player.updateSlowed()" :class="{ activeX: musicStore.rate < 1 }" class="canActive">
+      <button @click="player.updateSlowed()" :class="{ activeX: musicStore.rate < 1 }" class="can-active">
         <Svg name="Metronome" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
         <div class="under-bar"></div>
       </button>
 
-      <button @click="player.updateNightcore" :class="{ activeX: musicStore.rate > 1 }" class="canActive">
+      <button @click="player.updateNightcore" :class="{ activeX: musicStore.rate > 1 }" class="can-active">
         <Svg name="Groove" height="20" width="20" stroke="var(--colorText)"></Svg>
         <div class="under-bar"></div>
       </button>
 
-      <button class="canActive">
+      <button class="can-active">
         <Svg name="DJ" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
         <div class="under-bar"></div>
       </button>
@@ -232,7 +232,7 @@
       </div>
 
       <div class="player-buttons">
-        <button class="canActive" :class="{ activeX: musicStore.shuffle }" @click="player.updateShuffle">
+        <button class="can-active" :class="{ activeX: musicStore.shuffle }" @click="player.updateShuffle">
           <Svg name="Shuffle" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
           <div class="under-bar"></div>
         </button>
@@ -254,7 +254,7 @@
           <Svg name="Forward" fill="transparent" stroke="var(--colorText)"></Svg>
         </button>
 
-        <button class="canActive" :class="{ activeX: musicStore.loop }" @click="player.updateLoop">
+        <button class="can-active" :class="{ activeX: musicStore.loop }" @click="player.updateLoop">
           <Svg name="Loop" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
           <div class="under-bar"></div>
         </button>
