@@ -3,6 +3,7 @@
   import { PANEL_OPTIONS } from '@/modules/settings/constants/settings'
   import Svg from '@/modules/shared/components/Svg.vue'
   import { useMusicStore } from '@/modules/shared/constants/godStore'
+  import { setColor } from '@/modules/shared/scripts/generic'
 
   const musicStore = useMusicStore()
 
@@ -22,16 +23,42 @@
 
 <style lang="scss" scoped>
   .song-container {
+    transition: transform 0.3s ease;
     position: relative;
-    transition: 0.3s ease;
-    padding: 10px 20px;
+    padding: 10px;
+    padding-right: 20px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    border-radius: var(--radius);
     gap: 10px;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: rgba(0, 0, 0, 0.5);
+
+      .buttons {
+        opacity: 1;
+      }
+    }
+
+    &:active {
+      transform: scale(0.99);
+    }
+
+    .g-tag {
+      transition:
+        transform 0.3s ease,
+        width 0.3s ease,
+        height 0.3s ease;
+    }
+
+    &:not(:hover) {
+      .g-tag {
+        width: 10px !important;
+        height: 20px !important;
+        color: transparent !important;
+        transform: scale(0.7);
+      }
     }
 
     .play-zone {
@@ -44,7 +71,7 @@
     .cover {
       height: 75px;
       width: 75px;
-      border-radius: var(--maxRadius);
+      border-radius: 10px; //hardcoded --radius
       flex-shrink: 0;
       grid-row: span 2;
     }
@@ -83,6 +110,7 @@
     .buttons {
       display: flex;
       gap: 5px;
+      opacity: 0;
 
       button {
         padding: 0;
@@ -106,7 +134,7 @@
       <div class="tags">
         <div
           class="g-tag active"
-          :style="{ 'background-color': player.getTagColor(tagName) }"
+          :style="{ 'background-color': player.getTagColor(tagName), color: setColor(player.getTagColor(tagName)) }"
           v-for="tagName in props.song.tags"
         >
           {{ tagName }}

@@ -5,7 +5,6 @@
   import Songlist from '@/modules/songlist/components/Songlist.vue'
   import Player from '@/modules/player/components/Player.vue'
   import SettingsPanel from '@/modules/settings/components/SettingsPanel.vue'
-  import Playlist from '@/modules/playlist/components/Playlist.vue'
   import Toolbar from '@/modules/shared/components/Toolbar.vue'
   import Queue from '@/modules/songlist/components/Queue.vue'
   import { useMusicStore } from './modules/shared/constants/godStore'
@@ -27,7 +26,6 @@
 
   onMounted(async () => {
     musicStore.tags = JSON.parse(window.localStorage.getItem('tags') || '[]')
-    musicStore.playlists = JSON.parse(window.localStorage.getItem('playlists') || '[]')
     getSettings()
 
     await setAllSongs()
@@ -47,11 +45,11 @@
     overflow: hidden;
 
     display: grid;
-    grid-template-columns: 0px 1fr 350px;
-    grid-template-rows: 70px 250px;
+    grid-template-columns: 365px 1fr 0fr;
+    grid-template-rows: 80px 1fr 2.5fr;
 
     &.openLeftPanel {
-      grid-template-columns: 350px 1fr 350px;
+      grid-template-columns: 365px 1fr 350px;
 
       .settings-container {
         padding: 20px;
@@ -79,6 +77,26 @@
 
       //border: 0.5px solid red;
 
+      &.queue-container {
+        grid-row: span 2;
+      }
+
+      &.player-container {
+        grid-row: span 1;
+      }
+
+      &.toolbar-container {
+        grid-row: span 1;
+      }
+
+      &.songs-container {
+        grid-row: span 2;
+      }
+
+      &.settings-container {
+        grid-row: span 3;
+      }
+
       &:not(.settings-container, .songs-container) {
         padding: 20px;
       }
@@ -87,20 +105,6 @@
     .settings-container {
       transition: 0.3s opacity 0.3s;
       opacity: 0;
-
-      grid-row: span 5;
-    }
-
-    .queue-container {
-      grid-row: span 2;
-    }
-
-    .player-container {
-      grid-row: span 3;
-    }
-
-    .songs-container {
-      grid-row: span 3;
     }
 
     @include microDevice {
@@ -126,20 +130,16 @@
       }"
     ></div>
 
-    <div class="container settings-container">
-      <SettingsPanel v-show="musicStore.panel" />
+    <div class="container queue-container">
+      <Queue />
     </div>
 
     <div class="container toolbar-container">
       <Toolbar />
     </div>
 
-    <div class="container queue-container">
-      <Queue />
-    </div>
-
-    <div class="container playlist-container">
-      <Playlist />
+    <div class="container settings-container">
+      <SettingsPanel v-show="musicStore.panel" />
     </div>
 
     <div class="container songs-container">
