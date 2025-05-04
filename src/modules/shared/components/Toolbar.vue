@@ -9,6 +9,7 @@
   import { onBeforeUnmount, onMounted, ref, Ref } from 'vue'
   import { player } from '@/modules/player/scripts/player'
   import { setColor } from '@/modules/shared/scripts/generic'
+  import { watch } from 'vue'
 
   const musicStore = useMusicStore()
 
@@ -79,14 +80,35 @@
   onBeforeUnmount(() => {
     document.removeEventListener('click', handleClickOutside)
   })
+
+  watch(
+    () => musicStore.tagsSwitch,
+    () => player.filter()
+  )
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   #toolbar {
     display: flex;
     width: 100%;
     justify-content: flex-end;
     gap: 10px;
+
+    .count {
+      justify-self: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      line-height: 0;
+      width: 100%;
+      color: var(--colorPrimary);
+      font-family: var(--fontPrimary);
+      font-size: 30px;
+
+      .svg-container {
+        transform: translateY(-3px);
+      }
+    }
 
     .tool {
       border: unset;
@@ -150,6 +172,11 @@
 
 <template>
   <div id="toolbar" ref="HTMLToolbar">
+    <div class="count">
+      <Svg name="Music" fill="transparent" stroke="var(--colorPrimary)" width="30" height="30"></Svg>
+      {{ musicStore.songsFiltered.length }}
+    </div>
+
     <Search />
 
     <button class="tool" @click="() => toggleDropdown('filters')">
@@ -207,7 +234,7 @@
     </div>
 
     <button class="tool" @click="toggleSettings">
-      <Svg name="Settings" fill="transparent" stroke="var(--colorPrimary)"></Svg>
+      <Svg customClass="count-songs" name="Settings" fill="transparent" stroke="var(--colorPrimary)"></Svg>
     </button>
   </div>
 </template>

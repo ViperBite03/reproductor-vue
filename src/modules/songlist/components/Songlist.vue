@@ -3,6 +3,7 @@
   import { useMusicStore } from '@/modules/shared/constants/godStore'
   import Song from '@/modules/songlist/components/Song.vue'
   import { PANEL_OPTIONS } from '@/modules/settings/constants/settings'
+  import Svg from '@/modules/shared/components/Svg.vue'
 
   const musicStore = useMusicStore()
 
@@ -20,6 +21,7 @@
   .songlist {
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .add-song {
@@ -27,8 +29,10 @@
     position: absolute;
     bottom: 20px;
     right: 20px;
-    width: 50px;
-    height: 50px;
+    width: 70px;
+    height: 70px;
+    border-radius: var(--radius);
+    backdrop-filter: blur(5px);
   }
 </style>
 
@@ -37,5 +41,7 @@
     <Song v-for="song in musicStore.songsFiltered" :key="song.fileName" :song="song"> </Song>
   </div>
 
-  <button class="add-song" @click="toggleAddSong">+</button>
+  <button class="add-song" @click="toggleAddSong">
+    <Svg name="AddMusic" fill="transparent" stroke="var(--colorPrimary)"></Svg>
+  </button>
 </template>

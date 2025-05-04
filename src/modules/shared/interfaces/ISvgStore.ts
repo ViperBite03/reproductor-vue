@@ -1,4 +1,5 @@
-export type SvgStore = {AddQueue: string
+export type SvgStore = {AddMusic: string
+AddQueue: string
 AddTag: string
 Back: string
 CopyAdd: string

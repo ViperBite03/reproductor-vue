@@ -105,6 +105,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     height: 100%;
+    padding-right: 20px;
 
     .section {
       display: flex;

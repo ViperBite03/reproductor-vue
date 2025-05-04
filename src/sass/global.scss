@@ -32,7 +32,7 @@ input {
   }
 
   &:focus {
-    border: 1px solid var(--colorSecondary);
+    border: 1px solid white;
   }
 }
 
@@ -56,12 +56,14 @@ input {
   overflow: hidden;
   text-overflow: ellipsis;
 
-  opacity: 0.4;
+  opacity: 0.5;
   transform: scale(0.9);
+  filter: grayscale(1);
 
   &.active {
     opacity: 1;
     transform: scale(1);
+    filter: grayscale(0);
   }
 
   &:hover {

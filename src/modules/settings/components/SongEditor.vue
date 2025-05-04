@@ -42,8 +42,6 @@
     musicStore.songs[index].cover = cover.value
     musicStore.songs[index].tags = [...selectedTags.value]
 
-    musicStore.activeSong = musicStore.songs[index]
-
     player.filter()
   }
 
