@@ -24,15 +24,23 @@
     overflow-x: hidden;
   }
 
-  .add-song {
-    border-radius: 100%;
+  .add-song-container {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 70px;
-    height: 70px;
-    border-radius: var(--radius);
-    backdrop-filter: blur(5px);
+    bottom: 0px;
+    right: 0px;
+    padding: 20px;
+    padding-left: 200px;
+
+    .add-song {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+
+      border-radius: var(--radius);
+      backdrop-filter: blur(5px);
+    }
   }
 </style>
 
@@ -41,7 +49,9 @@
     <Song v-for="song in musicStore.songsFiltered" :key="song.fileName" :song="song"> </Song>
   </div>
 
-  <button class="add-song" @click="toggleAddSong">
-    <Svg name="AddMusic" fill="transparent" stroke="var(--colorPrimary)"></Svg>
-  </button>
+  <span class="add-song-container">
+    <button class="add-song" @click="toggleAddSong">
+      <Svg name="AddMusic" fill="transparent" stroke="var(--colorPrimary)"></Svg>
+    </button>
+  </span>
 </template>

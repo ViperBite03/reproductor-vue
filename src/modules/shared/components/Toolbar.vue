@@ -1,15 +1,14 @@
 <script setup lang="ts">
+  import { watch, computed, ComputedRef, onBeforeUnmount, onMounted, ref, Ref } from 'vue'
   import { useMusicStore } from '@/modules/shared/constants/godStore'
   import { PANEL_OPTIONS } from '@/modules/settings/constants/settings'
   import Svg from '@/modules/shared/components/Svg.vue'
   import Switch from '@/modules/shared/components/Switch.vue'
   import Search from '@/modules/songlist/components/Search.vue'
-  import type { ITag } from '@/modules/player/interfaces/ITag'
-  import type { IOrderOptions, IDropdownOptions } from '@/modules/shared/interfaces/IToolbarOptions'
-  import { onBeforeUnmount, onMounted, ref, Ref } from 'vue'
   import { player } from '@/modules/player/scripts/player'
   import { setColor } from '@/modules/shared/scripts/generic'
-  import { watch } from 'vue'
+  import type { ITag } from '@/modules/player/interfaces/ITag'
+  import type { IOrderOptions, IDropdownOptions } from '@/modules/shared/interfaces/IToolbarOptions'
 
   const musicStore = useMusicStore()
 
@@ -85,6 +84,8 @@
     () => musicStore.tagsSwitch,
     () => player.filter()
   )
+
+  const activeTags: ComputedRef<ITag[]> = computed(() => musicStore.tags.filter((t) => t.active))
 </script>
 
 <style lang="scss">
@@ -94,19 +95,36 @@
     justify-content: flex-end;
     gap: 10px;
 
-    .count {
-      justify-self: left;
+    .left {
       display: flex;
       align-items: center;
-      gap: 6px;
-      line-height: 0;
       width: 100%;
-      color: var(--colorPrimary);
-      font-family: var(--fontPrimary);
-      font-size: 30px;
 
-      .svg-container {
-        transform: translateY(-3px);
+      .tags {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+
+        .g-tag {
+          width: fit-content;
+        }
+      }
+
+      .count {
+        justify-self: left;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        line-height: 0;
+        color: var(--colorPrimary);
+        font-family: var(--fontPrimary);
+        font-size: 30px;
+
+        .svg-container {
+          transform: translateY(-3px);
+        }
       }
     }
 
@@ -172,9 +190,21 @@
 
 <template>
   <div id="toolbar" ref="HTMLToolbar">
-    <div class="count">
-      <Svg name="Music" fill="transparent" stroke="var(--colorPrimary)" width="30" height="30"></Svg>
-      {{ musicStore.songsFiltered.length }}
+    <div class="left">
+      <div class="count">
+        <Svg name="Music" fill="transparent" stroke="var(--colorPrimary)" width="30" height="30"></Svg>
+        {{ musicStore.songsFiltered.length }}
+      </div>
+
+      <div class="tags">
+        <div
+          class="g-tag active"
+          v-for="tag in activeTags"
+          :style="{ 'background-color': tag.color, color: setColor(tag.color) }"
+        >
+          {{ tag.name }}
+        </div>
+      </div>
     </div>
 
     <Search />
