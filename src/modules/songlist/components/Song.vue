@@ -71,8 +71,8 @@
     }
 
     .cover {
-      height: 75px;
-      width: 75px;
+      height: 70px;
+      width: 70px;
       border-radius: 10px; //hardcoded --radius
       flex-shrink: 0;
       grid-row: span 2;

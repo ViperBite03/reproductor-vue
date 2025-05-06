@@ -5,11 +5,12 @@
   import { player } from '@/modules/player/scripts/player'
 
   const musicStore = useMusicStore()
+
   const totalDurationFormatted: Ref<string> = ref('0:00')
   const currentDurationFormatted: Ref<string> = ref('0:00')
   const translate: Ref<number> = ref(105)
   const holding: Ref<boolean> = ref(false)
-  const mousePosition: Ref<number> = ref(0)
+  const mousePositionX: Ref<number> = ref(0)
 
   let progressPercentage: number = 0
   let flag: boolean = false
@@ -23,6 +24,20 @@
     return min + ':' + secZeros + sec
   }
 
+  const progressChange = () => {
+    const HTMLProgressBar = document.querySelector('.progress-bar')
+
+    const { left, width } = HTMLProgressBar.getBoundingClientRect()
+    const end: number = left + width
+
+    const newProgress: number = (mousePositionX.value * 100) / end
+    const newSec: number = (newProgress * musicStore.activeSong.howl.duration()) / 100
+
+    console.log(mousePositionX.value)
+
+    musicStore.activeSong.howl.seek(newSec)
+  }
+
   setInterval(() => {
     if (!musicStore.activeSong || !musicStore.activeSong.howl) return
 
@@ -32,7 +47,7 @@
 
     translate.value = 100 - progressPercentage
 
-    //if (holding) progressChange()
+    if (holding.value) progressChange()
 
     const songOffset: number = musicStore.activeSong.howl.duration() - musicStore.fadeTime
 
@@ -187,7 +202,13 @@
 
           padding: 0;
           background-color: unset;
-          border: none;
+          border: 0px solid var(--colorPrimary);
+          aspect-ratio: 1;
+          border-radius: 100%;
+
+          &.activeX {
+            border: 1px solid var(--colorPrimary);
+          }
         }
       }
     }
@@ -224,7 +245,12 @@
       <div class="progress-container">
         <div class="actual-time">{{ currentDurationFormatted }}</div>
 
-        <div class="progress-bar">
+        <div
+          class="progress-bar"
+          @mousedown="() => (holding = true)"
+          @mouseup="() => (holding = false)"
+          @mousemove="(event) => (mousePositionX = event.clientX)"
+        >
           <div class="progress" :style="{ transform: `translateX(-${translate}%)` }"></div>
         </div>
 
@@ -232,9 +258,8 @@
       </div>
 
       <div class="player-buttons">
-        <button class="can-active" :class="{ activeX: musicStore.shuffle }" @click="player.updateShuffle">
+        <button class="active-button" :class="{ activeX: musicStore.shuffle }" @click="player.updateShuffle">
           <Svg name="Shuffle" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
-          <div class="under-bar"></div>
         </button>
 
         <button class="before" @click="player.back">
@@ -254,9 +279,8 @@
           <Svg name="Forward" fill="transparent" stroke="var(--colorText)"></Svg>
         </button>
 
-        <button class="can-active" :class="{ activeX: musicStore.loop }" @click="player.updateLoop">
+        <button class="active-button" :class="{ activeX: musicStore.loop }" @click="player.updateLoop">
           <Svg name="Loop" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
-          <div class="under-bar"></div>
         </button>
       </div>
     </div>
