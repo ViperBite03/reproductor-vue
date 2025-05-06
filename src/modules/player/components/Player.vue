@@ -8,11 +8,9 @@
 
   const totalDurationFormatted: Ref<string> = ref('0:00')
   const currentDurationFormatted: Ref<string> = ref('0:00')
-  const translate: Ref<number> = ref(105)
+  const progressPercentage: Ref<number> = ref(0)
   const holding: Ref<boolean> = ref(false)
   const mousePositionX: Ref<number> = ref(0)
-
-  let progressPercentage: number = 0
   let flag: boolean = false
 
   const formatToDuration = (duration: number): string => {
@@ -28,12 +26,9 @@
     const HTMLProgressBar = document.querySelector('.progress-bar')
 
     const { left, width } = HTMLProgressBar.getBoundingClientRect()
-    const end: number = left + width
 
-    const newProgress: number = (mousePositionX.value * 100) / end
+    const newProgress: number = ((mousePositionX.value - left) * 100) / width
     const newSec: number = (newProgress * musicStore.activeSong.howl.duration()) / 100
-
-    console.log(mousePositionX.value)
 
     musicStore.activeSong.howl.seek(newSec)
   }
@@ -43,9 +38,7 @@
 
     currentDurationFormatted.value = formatToDuration(~~musicStore.activeSong.howl.seek())
 
-    progressPercentage = (musicStore.activeSong.howl.seek() * 100) / musicStore.activeSong.howl.duration()
-
-    translate.value = 100 - progressPercentage
+    progressPercentage.value = (musicStore.activeSong.howl.seek() * 100) / musicStore.activeSong.howl.duration()
 
     if (holding.value) progressChange()
 
@@ -87,6 +80,10 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
+
+    * {
+      user-select: none;
+    }
 
     .button-bar {
       display: flex;
@@ -175,11 +172,39 @@
           height: 5px;
           background-color: var(--colorText);
           border-radius: 50px;
-          overflow: hidden;
+
+          cursor: pointer;
 
           .progress {
             height: 5px;
             background-color: var(--colorPrimary);
+            position: relative;
+            border-radius: 50px;
+
+            &::after {
+              content: '';
+              transition:
+                background-color 0.2s ease,
+                box-shadow 0.5s ease;
+              width: 6px;
+              height: 6px;
+              border-radius: 100%;
+              position: absolute;
+              right: -3px;
+              top: -1.5px;
+            }
+          }
+
+          &:hover {
+            .progress {
+              &::after {
+                transition:
+                  background-color 0.2s ease,
+                  box-shadow 0.5s ease;
+                background-color: var(--colorAccent);
+                box-shadow: 0 0 0 5px rgb(255, 255, 255);
+              }
+            }
           }
         }
 
@@ -247,11 +272,12 @@
 
         <div
           class="progress-bar"
-          @mousedown="() => (holding = true)"
           @mouseup="() => (holding = false)"
+          @mouseleave="() => (holding = false)"
+          @mousedown="() => (holding = true)"
           @mousemove="(event) => (mousePositionX = event.clientX)"
         >
-          <div class="progress" :style="{ transform: `translateX(-${translate}%)` }"></div>
+          <div class="progress" :style="{ width: `${progressPercentage}%` }"></div>
         </div>
 
         <div class="total-time">{{ totalDurationFormatted }}</div>
