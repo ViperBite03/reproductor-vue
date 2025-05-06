@@ -120,5 +120,20 @@
         <input class="input" type="range" v-model="musicStore.slowRate" min="0.1" max="1" step="0.1" />
       </div>
     </div>
+
+    <div class="dj-container">
+      <!--Start, end-->
+      <div class="dj-start">
+        <span><strong>Start</strong></span>
+
+        <input class="input" type="number" v-model="musicStore.djModeStart" min="1" max="50" />
+      </div>
+
+      <div class="dj-start">
+        <span><strong>Finish</strong></span>
+
+        <input class="input" type="number" v-model="musicStore.djModeFinish" min="50" max="100" />
+      </div>
+    </div>
   </div>
 </template>
