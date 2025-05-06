@@ -75,24 +75,27 @@
 
 <style lang="scss">
   #player {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-
     * {
       user-select: none;
     }
 
+    height: 100%;
+    width: 100%;
+    padding: 25px;
+
+    background-color: var(--colorSecondary);
+    border-radius: var(--maxRadius);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    //box-shadow: 0px 10px 29px -14px var(--colorSecondary);
+
     .button-bar {
       display: flex;
-      background-color: var(--colorSecondary);
-      border-radius: 100px;
-      padding: 15px 25px;
-      width: fit-content;
       gap: 10px;
-      padding-top: 21px;
     }
 
     .can-active {
@@ -121,119 +124,116 @@
       }
     }
 
-    .player {
-      height: 100%;
-      width: 100%;
-      padding: 25px;
-
-      background-color: var(--colorSecondary);
+    .cover {
+      overflow: hidden;
       border-radius: var(--maxRadius);
-
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-
-      //box-shadow: 0px 10px 29px -14px var(--colorSecondary);
-
-      .cover {
-        overflow: hidden;
-        border-radius: var(--maxRadius);
-        width: 100%;
-        aspect-ratio: 1;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: cover;
-      }
+      border: 1px solid;
+      width: 100%;
+      aspect-ratio: 1;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      position: relative;
 
       .details {
         text-align: center;
+        position: absolute;
+        bottom: 0;
+        padding: 20px;
+        width: 100%;
+        background-color: var(--colorSecondary);
+        padding-top: 100px;
+
+        background: linear-gradient(180deg, rgba(198, 218, 84, 0) 0%, rgba(0, 0, 0, 0.9) 100%);
+        border-radius: var(--maxRadius);
 
         .title {
-          font-size: 25px;
+          font-size: 20px;
           color: var(--colorText);
           font-weight: bold;
+          text-align: left;
         }
 
         .artist {
-          color: var(--colorText);
+          text-align: left;
+          color: var(--colorPrimary);
           font-weight: lighter;
         }
       }
+    }
 
-      .progress-container {
+    .progress-container {
+      width: 100%;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+
+      .progress-bar {
         width: 100%;
-        display: flex;
-        gap: 10px;
-        align-items: center;
+        height: 5px;
+        background-color: var(--colorText);
+        border-radius: 50px;
 
-        .progress-bar {
-          width: 100%;
+        cursor: pointer;
+
+        .progress {
           height: 5px;
-          background-color: var(--colorText);
+          background-color: var(--colorPrimary);
+          position: relative;
           border-radius: 50px;
 
-          cursor: pointer;
+          &::after {
+            content: '';
+            transition:
+              background-color 0.2s ease,
+              box-shadow 0.5s ease;
+            width: 6px;
+            height: 6px;
+            border-radius: 100%;
+            position: absolute;
+            right: -3px;
+            top: -1.5px;
+          }
+        }
 
+        &:hover {
           .progress {
-            height: 5px;
-            background-color: var(--colorPrimary);
-            position: relative;
-            border-radius: 50px;
-
             &::after {
-              content: '';
               transition:
                 background-color 0.2s ease,
                 box-shadow 0.5s ease;
-              width: 6px;
-              height: 6px;
-              border-radius: 100%;
-              position: absolute;
-              right: -3px;
-              top: -1.5px;
+              background-color: var(--colorAccent);
+              box-shadow: 0 0 0 5px rgb(255, 255, 255);
             }
           }
-
-          &:hover {
-            .progress {
-              &::after {
-                transition:
-                  background-color 0.2s ease,
-                  box-shadow 0.5s ease;
-                background-color: var(--colorAccent);
-                box-shadow: 0 0 0 5px rgb(255, 255, 255);
-              }
-            }
-          }
-        }
-
-        .actual-time,
-        .total-time {
-          color: var(--colorText);
-          min-width: 35px;
-          text-align: center;
         }
       }
 
-      .player-buttons {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 15px;
+      .actual-time,
+      .total-time {
+        color: var(--colorText);
+        min-width: 35px;
+        text-align: center;
+      }
+    }
 
-        button {
-          height: 40px;
+    .player-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
 
-          padding: 0;
-          background-color: unset;
-          border: 0px solid var(--colorPrimary);
-          aspect-ratio: 1;
-          border-radius: 100%;
+      button {
+        height: 40px;
 
-          &.activeX {
-            border: 1px solid var(--colorPrimary);
-          }
+        padding: 0;
+        background-color: unset;
+        border: 0px solid var(--colorPrimary);
+        aspect-ratio: 1;
+        border-radius: 100%;
+
+        &.activeX {
+          border: 1px solid var(--colorPrimary);
         }
       }
     }
@@ -259,56 +259,54 @@
       </button>
     </div>
 
-    <div class="player">
-      <div class="cover g-shadow" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"></div>
-
+    <div class="cover g-shadow" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }">
       <div class="details">
         <div class="title">{{ musicStore.activeSong.title }}</div>
         <div class="artist">{{ musicStore.activeSong.artist }}</div>
       </div>
+    </div>
 
-      <div class="progress-container">
-        <div class="actual-time">{{ currentDurationFormatted }}</div>
+    <div class="progress-container">
+      <div class="actual-time">{{ currentDurationFormatted }}</div>
 
-        <div
-          class="progress-bar"
-          @mouseup="() => (holding = false)"
-          @mouseleave="() => (holding = false)"
-          @mousedown="() => (holding = true)"
-          @mousemove="(event) => (mousePositionX = event.clientX)"
-        >
-          <div class="progress" :style="{ width: `${progressPercentage}%` }"></div>
-        </div>
-
-        <div class="total-time">{{ totalDurationFormatted }}</div>
+      <div
+        class="progress-bar"
+        @mouseup="() => (holding = false)"
+        @mouseleave="() => (holding = false)"
+        @mousedown="() => (holding = true)"
+        @mousemove="(event) => (mousePositionX = event.clientX)"
+      >
+        <div class="progress" :style="{ width: `${progressPercentage}%` }"></div>
       </div>
 
-      <div class="player-buttons">
-        <button class="active-button" :class="{ activeX: musicStore.shuffle }" @click="player.updateShuffle">
-          <Svg name="Shuffle" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
-        </button>
+      <div class="total-time">{{ totalDurationFormatted }}</div>
+    </div>
 
-        <button class="before" @click="player.back">
-          <Svg name="Back" fill="transparent" stroke="var(--colorText)"></Svg>
-        </button>
+    <div class="player-buttons">
+      <button class="active-button" :class="{ activeX: musicStore.shuffle }" @click="player.updateShuffle">
+        <Svg name="Shuffle" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
+      </button>
 
-        <button class="play" ref="play" @click="togglePlay">
-          <span v-if="musicStore.isPaused">
-            <Svg name="PlayFilled" height="40" width="40" fill="var(--colorText)"></Svg>
-          </span>
-          <span v-else>
-            <Svg name="PauseFilled" height="40" width="40" fill="var(--colorText)"></Svg>
-          </span>
-        </button>
+      <button class="before" @click="player.back">
+        <Svg name="Back" fill="transparent" stroke="var(--colorText)"></Svg>
+      </button>
 
-        <button class="after" @click="player.forth">
-          <Svg name="Forward" fill="transparent" stroke="var(--colorText)"></Svg>
-        </button>
+      <button class="play" ref="play" @click="togglePlay">
+        <span v-if="musicStore.isPaused">
+          <Svg name="PlayFilled" height="40" width="40" fill="var(--colorText)"></Svg>
+        </span>
+        <span v-else>
+          <Svg name="PauseFilled" height="40" width="40" fill="var(--colorText)"></Svg>
+        </span>
+      </button>
 
-        <button class="active-button" :class="{ activeX: musicStore.loop }" @click="player.updateLoop">
-          <Svg name="Loop" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
-        </button>
-      </div>
+      <button class="after" @click="player.forth">
+        <Svg name="Forward" fill="transparent" stroke="var(--colorText)"></Svg>
+      </button>
+
+      <button class="active-button" :class="{ activeX: musicStore.loop }" @click="player.updateLoop">
+        <Svg name="Loop" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
+      </button>
     </div>
   </div>
 </template>

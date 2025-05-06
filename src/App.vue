@@ -46,7 +46,7 @@
 
     display: grid;
     grid-template-columns: 365px 1fr 0fr;
-    grid-template-rows: 80px 1fr 2.5fr;
+    grid-template-rows: 80px 1fr 550px;
 
     &.openLeftPanel {
       grid-template-columns: 365px 1fr 350px;
