@@ -90,10 +90,6 @@
         </div>
       </button>
 
-      <!--<div class="volume-bar">
-        <div class="current-volume"></div>
-      </div>-->
-
       <input
         type="range"
         class="volume-bar"

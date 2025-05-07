@@ -1,72 +1,11 @@
 <script lang="ts" setup>
-  import { ref, watch, Ref } from 'vue'
-  import Svg from '@/modules/shared/components/Svg.vue'
   import { useMusicStore } from '@/modules/shared/constants/godStore'
   import { player } from '@/modules/player/scripts/player'
+  import Svg from '@/modules/shared/components/Svg.vue'
+  import Progress from './Progress.vue'
+  import Volume from './Volume.vue'
 
   const musicStore = useMusicStore()
-
-  const totalDurationFormatted: Ref<string> = ref('0:00')
-  const currentDurationFormatted: Ref<string> = ref('0:00')
-  const progressPercentage: Ref<number> = ref(0)
-  const holding: Ref<boolean> = ref(false)
-  const mousePositionX: Ref<number> = ref(0)
-  let flag: boolean = false
-
-  const formatToDuration = (duration: number): string => {
-    let min: number = ~~(duration / 60)
-    let sec: number = ~~(duration % 60)
-
-    let secZeros = sec < 10 ? '0' : ''
-
-    return min + ':' + secZeros + sec
-  }
-
-  const progressChange = () => {
-    const HTMLProgressBar = document.querySelector('.progress-bar')
-
-    const { left, width } = HTMLProgressBar.getBoundingClientRect()
-
-    const newProgress: number = ((mousePositionX.value - left) * 100) / width
-    const newSec: number = (newProgress * musicStore.activeSong.howl.duration()) / 100
-
-    musicStore.activeSong.howl.seek(newSec)
-  }
-
-  setInterval(() => {
-    if (!musicStore.activeSong || !musicStore.activeSong.howl) return
-
-    currentDurationFormatted.value = formatToDuration(~~musicStore.activeSong.howl.seek())
-
-    progressPercentage.value = (musicStore.activeSong.howl.seek() * 100) / musicStore.activeSong.howl.duration()
-
-    if (holding.value) progressChange()
-
-    const songOffset: number = musicStore.activeSong.howl.duration() - musicStore.fadeTime
-
-    if (musicStore.djMode) {
-      const endTime = (musicStore.activeSong.howl.duration() * musicStore.djModeFinish) / 100
-
-      if (musicStore.activeSong.howl.seek() > endTime && !flag) {
-        flag = true
-        player.next()
-      }
-    } else if (musicStore.activeSong.howl.seek() > songOffset && !flag) {
-      flag = true
-      player.next()
-    }
-
-    if (musicStore.activeSong.howl.seek() < songOffset) flag = false
-  }, 100)
-
-  watch(
-    () => musicStore.activeSong.howl,
-    (howl) => {
-      if (!howl) return
-
-      totalDurationFormatted.value = formatToDuration(~~howl.duration())
-    }
-  )
 
   const togglePlay = () => {
     musicStore.isPaused ? player.resume() : player.pause()
@@ -77,6 +16,7 @@
   #player {
     * {
       user-select: none;
+      border: none;
     }
 
     height: 100%;
@@ -92,37 +32,6 @@
     align-items: center;
 
     //box-shadow: 0px 10px 29px -14px var(--colorSecondary);
-
-    .button-bar {
-      display: flex;
-      gap: 10px;
-    }
-
-    .can-active {
-      background-color: unset;
-      border: none;
-      padding: 0;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      gap: 3px;
-
-      .under-bar {
-        height: 3px;
-        width: 0;
-        background-color: var(--colorText);
-        border-radius: var(--maxRadius);
-        transition: 0.3s;
-      }
-
-      &.activeX {
-        .under-bar {
-          width: 10px;
-        }
-      }
-    }
 
     .cover {
       overflow: hidden;
@@ -162,74 +71,43 @@
       }
     }
 
-    .progress-container {
-      width: 100%;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-
-      .progress-bar {
-        width: 100%;
-        height: 5px;
-        background-color: var(--colorText);
-        border-radius: 50px;
-
-        cursor: pointer;
-
-        .progress {
-          height: 5px;
-          background-color: var(--colorPrimary);
-          position: relative;
-          border-radius: 50px;
-
-          &::after {
-            content: '';
-            transition:
-              background-color 0.2s ease,
-              box-shadow 0.5s ease;
-            width: 6px;
-            height: 6px;
-            border-radius: 100%;
-            position: absolute;
-            right: -3px;
-            top: -1.5px;
-          }
-        }
-
-        &:hover {
-          .progress {
-            &::after {
-              transition:
-                background-color 0.2s ease,
-                box-shadow 0.5s ease;
-              background-color: var(--colorAccent);
-              box-shadow: 0 0 0 5px rgb(255, 255, 255);
-            }
-          }
-        }
-      }
-
-      .actual-time,
-      .total-time {
-        color: var(--colorText);
-        min-width: 35px;
-        text-align: center;
-      }
-    }
-
     .player-buttons {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 15px;
 
-      button {
+      .play {
         height: 40px;
+        aspect-ratio: 1;
+      }
 
+      .can-active {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        gap: 3px;
+
+        .under-bar {
+          height: 3px;
+          width: 0;
+          background-color: var(--colorText);
+          border-radius: var(--maxRadius);
+          transition: 0.3s;
+        }
+
+        &.active-underbar {
+          .under-bar {
+            width: 10px;
+          }
+        }
+      }
+
+      button {
         padding: 0;
         background-color: unset;
-        border: 0px solid var(--colorPrimary);
-        aspect-ratio: 1;
+        border: none;
         border-radius: 100%;
 
         &.activeX {
@@ -242,22 +120,12 @@
 
 <template>
   <div id="player">
-    <div class="button-bar">
-      <button @click="player.updateSlowed()" :class="{ activeX: musicStore.rate < 1 }" class="can-active">
-        <Svg name="Metronome" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
-        <div class="under-bar"></div>
-      </button>
+    <!--<button class="can-active">
+      <Svg name="DJ" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
+      <div class="under-bar"></div>
+    </button>-->
 
-      <button @click="player.updateNightcore" :class="{ activeX: musicStore.rate > 1 }" class="can-active">
-        <Svg name="Groove" height="20" width="20" stroke="var(--colorText)"></Svg>
-        <div class="under-bar"></div>
-      </button>
-
-      <button class="can-active">
-        <Svg name="DJ" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
-        <div class="under-bar"></div>
-      </button>
-    </div>
+    <Volume></Volume>
 
     <div class="cover g-shadow" :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }">
       <div class="details">
@@ -266,23 +134,14 @@
       </div>
     </div>
 
-    <div class="progress-container">
-      <div class="actual-time">{{ currentDurationFormatted }}</div>
-
-      <div
-        class="progress-bar"
-        @mouseup="() => (holding = false)"
-        @mouseleave="() => (holding = false)"
-        @mousedown="() => (holding = true)"
-        @mousemove="(event) => (mousePositionX = event.clientX)"
-      >
-        <div class="progress" :style="{ width: `${progressPercentage}%` }"></div>
-      </div>
-
-      <div class="total-time">{{ totalDurationFormatted }}</div>
-    </div>
+    <Progress></Progress>
 
     <div class="player-buttons">
+      <!--<button @click="player.updateSlowed()" :class="{ 'active-underbar': musicStore.rate < 1 }" class="can-active">
+        <Svg name="Metronome" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
+        <div class="under-bar"></div>
+      </button>-->
+
       <button class="active-button" :class="{ activeX: musicStore.shuffle }" @click="player.updateShuffle">
         <Svg name="Shuffle" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
       </button>
@@ -307,6 +166,11 @@
       <button class="active-button" :class="{ activeX: musicStore.loop }" @click="player.updateLoop">
         <Svg name="Loop" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
       </button>
+
+      <!--<button @click="player.updateNightcore" :class="{ 'active-underbar': musicStore.rate > 1 }" class="can-active">
+        <Svg name="Groove" height="20" width="20" stroke="var(--colorText)"></Svg>
+        <div class="under-bar"></div>
+      </button>-->
     </div>
   </div>
 </template>
