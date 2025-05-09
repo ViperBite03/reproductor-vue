@@ -75,10 +75,6 @@
 
 <style lang="scss">
   #player {
-    * {
-      user-select: none;
-    }
-
     height: 100%;
     width: 100%;
     padding: 25px;
@@ -92,6 +88,10 @@
     align-items: center;
 
     //box-shadow: 0px 10px 29px -14px var(--colorSecondary);
+
+    * {
+      user-select: none;
+    }
 
     .button-bar {
       display: flex;
@@ -127,7 +127,6 @@
     .cover {
       overflow: hidden;
       border-radius: var(--maxRadius);
-      border: 1px solid;
       width: 100%;
       aspect-ratio: 1;
       background-repeat: no-repeat;
@@ -140,12 +139,10 @@
         position: absolute;
         bottom: 0;
         padding: 20px;
+        padding-top: 50px;
         width: 100%;
         background-color: var(--colorSecondary);
-        padding-top: 100px;
-
-        background: linear-gradient(180deg, rgba(198, 218, 84, 0) 0%, rgba(0, 0, 0, 0.9) 100%);
-        border-radius: var(--maxRadius);
+        background: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(255, 255, 255, 0) 100%);
 
         .title {
           font-size: 20px;
@@ -158,6 +155,7 @@
           text-align: left;
           color: var(--colorPrimary);
           font-weight: lighter;
+          font-size: 14px;
         }
       }
     }
@@ -253,7 +251,11 @@
         <div class="under-bar"></div>
       </button>
 
-      <button class="can-active">
+      <button
+        @click="() => (musicStore.djMode = !musicStore.djMode)"
+        :class="{ activeX: musicStore.djMode }"
+        class="can-active"
+      >
         <Svg name="DJ" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
         <div class="under-bar"></div>
       </button>
