@@ -209,8 +209,8 @@ export const player = {
   updateShuffle() {
     getMusicStore().shuffle = !getMusicStore().shuffle
   },
-  updateVolume(newValue: string) {
-    getMusicStore().newVolume = Number(newValue)
+  updateVolume(newValue: number) {
+    getMusicStore().newVolume = newValue
     getMusicStore().volume = getMusicStore().newVolume
 
     // Guardamos el valor antiguo
