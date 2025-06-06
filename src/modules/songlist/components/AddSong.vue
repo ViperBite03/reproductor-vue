@@ -164,7 +164,7 @@
     <div class="section">
       <input type="text" v-model="youtubeURL" placeholder="youtube url" />
       <button @click="getMetadataFromYT">
-        {{ loadingMetaData ? 'Sacando metadatos del ciberespacio...' : 'Obtener metadatos' }}
+        {{ loadingMetaData ? 'Sacando metadatos...' : 'Obtener metadatos' }}
       </button>
     </div>
 
