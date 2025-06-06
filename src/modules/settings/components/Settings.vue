@@ -77,32 +77,6 @@
   <div class="settings">
     <h2 class="g-title">Settings</h2>
 
-    <div class="volume-container">
-      <button class="speaker" @click="player.toggleMute()">
-        <div v-if="musicStore.volume > 0.05">
-          <Svg name="VolumeHigh" fill="transparent"></Svg>
-        </div>
-        <div v-else-if="musicStore.volume <= 0.05 && musicStore.volume != 0">
-          <Svg name="VolumeLow" fill="transparent"></Svg>
-        </div>
-        <div v-else-if="musicStore.volume == 0">
-          <Svg name="Mute" fill="transparent"></Svg>
-        </div>
-      </button>
-
-      <input
-        type="range"
-        class="volume-bar"
-        min="0"
-        max="0.5"
-        step="0.01"
-        :value="musicStore.volume"
-        @input="player.updateVolume($event.target.value)"
-      />
-
-      <!--{{ (musicStore.volume * 100) / 0.5 }}-->
-    </div>
-
     <div class="rate-container">
       <div class="night rate">
         <span><strong>Nightcore rate</strong>&emsp;{{ musicStore.nightRate }}</span>

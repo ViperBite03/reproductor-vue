@@ -179,10 +179,6 @@
         width: fit-content;
         padding-bottom: 20px;
         gap: 10px;
-
-        span {
-          width: fit-content;
-        }
       }
     }
   }

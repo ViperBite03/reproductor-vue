@@ -151,7 +151,7 @@
       </div>
 
       <div class="section">
-        <div class="image-preview" :style="{ 'background-image': `url(${cover}})` }"></div>
+        <div class="image-preview" :style="{ 'background-image': `url('${cover}' )` }"></div>
         <input type="text" v-model="cover" placeholder="Image URL" />
       </div>
 

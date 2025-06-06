@@ -11,7 +11,7 @@
   watch(
     () => musicStore.volume,
     () => {
-      rangeValue.value = musicStore.volume * 1000
+      rangeValue.value = musicStore.volume * 100
     }
   )
 </script>
@@ -33,10 +33,10 @@
 <template>
   <div class="volume-container">
     <button class="speaker" @click="player.toggleMute()">
-      <div v-if="musicStore.volume > 0.05">
+      <div v-if="musicStore.volume > 0.5">
         <Svg name="VolumeHigh" fill="transparent"></Svg>
       </div>
-      <div v-else-if="musicStore.volume <= 0.05 && musicStore.volume != 0">
+      <div v-else-if="musicStore.volume <= 0.5 && musicStore.volume != 0">
         <Svg name="VolumeLow" fill="transparent"></Svg>
       </div>
       <div v-else-if="musicStore.volume == 0">
@@ -44,6 +44,6 @@
       </div>
     </button>
 
-    <Range v-model="rangeValue" @pikachu="() => player.updateVolume(rangeValue / 1000)"></Range>
+    <Range v-model="rangeValue" @pikachu="() => player.updateVolume(rangeValue / 100)"></Range>
   </div>
 </template>
