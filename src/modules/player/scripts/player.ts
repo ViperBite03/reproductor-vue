@@ -16,6 +16,26 @@ const isInStoreTags = (songTagName: string, activeTags: ITag[]): boolean => {
 
 const getMusicStore = () => useMusicStore()
 
+export async function getBlobUrl(fileName: string): Promise<string> {
+  const mp3 = fileName.includes('.mp3') ? '' : '.mp3'
+  // Llama al preload para obtener el contenido base64 del archivo
+  const base64: string = await window.electron.ipcRenderer.invoke('load-audio-blob', fileName + mp3)
+
+  // Decodifica el base64 a un array de bytes
+  const byteCharacters = atob(base64)
+  const byteNumbers = new Array(byteCharacters.length)
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i)
+  }
+  const byteArray = new Uint8Array(byteNumbers)
+
+  // Crea el blob y la URL
+  const blob = new Blob([byteArray], { type: 'audio/mp3' })
+  const blobUrl = URL.createObjectURL(blob)
+
+  return blobUrl
+}
+
 //usar el Howler.pool para la lista de sonidos inactivos (autoplay)
 export const player = {
   filter() {
@@ -79,7 +99,7 @@ export const player = {
       return desc ? -comparison : comparison
     })
   },
-  play(fileName: string, isHistory: boolean = false) {
+  async play(fileName: string, isHistory: boolean = false) {
     const howlsList = (Howler as any)._howls
 
     if (howlsList.length === 1) {
@@ -94,10 +114,10 @@ export const player = {
       howlsList[0].fade(getMusicStore().volume, 0, getMusicStore().fadeTime * 1000)
     }
 
-    const mp3 = fileName.includes('.mp3') ? '' : '.mp3'
-
+    const src = await getBlobUrl(fileName)
     const howl = new Howl({
-      src: [getMusicStore().path + fileName + mp3],
+      src: [src],
+      format: ['mp3'],
       rate: getMusicStore().rate,
       volume: getMusicStore().volume,
       onpause: () => (getMusicStore().isPaused = true),

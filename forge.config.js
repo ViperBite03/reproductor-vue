@@ -1,15 +1,19 @@
+const path = require('path')
 const { FusesPlugin } = require('@electron-forge/plugin-fuses')
 const { FuseV1Options, FuseVersion } = require('@electron/fuses')
 
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: 'src/favicons/favicon', // no file extension required
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        setupIcon: path.resolve(__dirname, 'src/favicons/favicon.ico'),
+      },
     },
     {
       name: '@electron-forge/maker-zip',
@@ -17,7 +21,9 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-deb',
-      config: {},
+      config: {
+        icon: path.resolve(__dirname, 'favicons/favicon.png'),
+      },
     },
     {
       name: '@electron-forge/maker-rpm',

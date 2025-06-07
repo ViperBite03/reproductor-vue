@@ -1,9 +1,7 @@
 <script setup>
   import { useMusicStore } from '@/modules/shared/constants/godStore'
-  import { PANEL_OPTIONS } from '@/modules/settings/constants/settings'
   import { player } from '@/modules/player/scripts/player'
   import { watch } from 'vue'
-  import Svg from '@/modules/shared/components/Svg.vue'
 
   const musicStore = useMusicStore()
 
@@ -24,6 +22,18 @@
       player.updateNightcore()
     }
   )
+
+  const openMusicFolder = async () => {
+    await window.electron.ipcRenderer.invoke('open-path')
+  }
+
+  const resetApp = async () => {
+    await window.electron.ipcRenderer.invoke('reset-app')
+  }
+
+  const toggleDJMode = () => {
+    musicStore.djMode = !musicStore.djMode
+  }
 </script>
 
 <style lang="scss">
@@ -31,31 +41,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-
-    .volume-container {
-      width: 100%;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-
-      .volume-bar {
-        width: 100%;
-        height: 5px;
-        background-color: var(--colorText);
-        border-radius: 50px;
-        overflow: hidden;
-
-        .current-volume {
-          height: 5px;
-          background-color: var(--colorPrimary);
-        }
-      }
-      button {
-        background-color: transparent;
-        border: none;
-        padding: 0;
-      }
-    }
+    padding-right: 20px;
 
     .rate-container {
       display: flex;
@@ -70,12 +56,29 @@
         flex-direction: column;
       }
     }
+
+    .dj-start {
+      padding-top: 10px;
+      span {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+      }
+
+      input {
+        width: 80px;
+      }
+    }
   }
 </style>
 
 <template>
   <div class="settings">
     <h2 class="g-title">Settings</h2>
+    <button @click="openMusicFolder">Abrir carpeta de canciones MP3</button>
+    <button @click="resetApp">Reiniciar APP</button>
+
+    <br />
 
     <div class="rate-container">
       <div class="night rate">
@@ -91,17 +94,17 @@
       </div>
     </div>
 
+    <button @click="toggleDJMode">DJ Mode {{ musicStore.djMode ? 'on' : 'off' }}</button>
+
     <div class="dj-container">
       <!--Start, end-->
       <div class="dj-start">
-        <span><strong>Start</strong></span>
-
+        <span>Start</span>
         <input class="input" type="number" v-model="musicStore.djModeStart" min="1" max="50" />
       </div>
 
       <div class="dj-start">
-        <span><strong>Finish</strong></span>
-
+        <span>Finish</span>
         <input class="input" type="number" v-model="musicStore.djModeFinish" min="50" max="100" />
       </div>
     </div>

@@ -1,7 +1,8 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import path from 'node:path'
 import started from 'electron-squirrel-startup'
-
+import { musicPath } from '@/modules/backend/scripts/getMusicPath'
+import fs from 'fs'
 import type { IScrapData } from '@/modules/backend/interfaces/IScrapData'
 import {
   scrapSong,
@@ -18,11 +19,16 @@ if (started) {
 }
 
 const createWindow = () => {
+  const iconPath =
+    process.env.NODE_ENV === 'development'
+      ? path.join(process.cwd(), 'src', 'favicons', 'favicon.ico')
+      : path.join(process.resourcesPath, 'favicons', 'favicon.ico')
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1700,
     height: 900,
-    // icon: path.join(__dirname, 'favicon.ico'),
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -38,7 +44,9 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  if (process.env.NODE_ENV === 'development') {
+    mainWindow.webContents.openDevTools()
+  }
 }
 
 // This method will be called when Electron has finished
@@ -74,10 +82,13 @@ ipcMain.handle('delete-file', async (_, fileName) => deleteFile(fileName))
 ipcMain.handle('write-metadata', async (_, metadata, fileName) => writeMetaData(metadata, fileName))
 ipcMain.handle('read-metadata', async (_, fileName) => readMetaData(fileName))
 ipcMain.handle('get-song-file-names', getSongFileNames)
-
-ipcMain.handle('get-path', async () => {
-  const path = await process.cwd()
-  const fstext = process.env.NODE_ENV === 'development' ? '/@fs/' : ''
-
-  return fstext + path + '/music/'
+ipcMain.handle('load-audio-blob', async (_, fileName) => {
+  const fullPath = path.join(musicPath, fileName)
+  const buffer = fs.readFileSync(fullPath)
+  return buffer.toString('base64')
+})
+ipcMain.handle('open-path', () => shell.openPath(musicPath))
+ipcMain.handle('reset-app', () => {
+  app.relaunch()
+  app.exit(0)
 })

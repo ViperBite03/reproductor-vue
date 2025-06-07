@@ -1,6 +1,6 @@
 {
-  "name": "my-vue-app",
-  "productName": "my-vue-app",
+  "name": "vipermusic",
+  "productName": "ViperMusic",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
@@ -10,7 +10,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "icons": "node ./devScripts/updateSvgStore.mjs"
+    "icons": "node ./devScripts/updateSvgStore.mjs",
+    "favicon": "npx icon-gen ./src/favicon.png --output ./assets/icons --types ico"
   },
   "keywords": [],
   "author": {
@@ -23,6 +24,7 @@
     "@electron-forge/maker-deb": "^7.8.0",
     "@electron-forge/maker-rpm": "^7.8.0",
     "@electron-forge/maker-squirrel": "^7.8.0",
+    "@electron-forge/maker-wix": "^7.8.1",
     "@electron-forge/maker-zip": "^7.8.0",
     "@electron-forge/plugin-auto-unpack-natives": "^7.8.0",
     "@electron-forge/plugin-fuses": "^7.8.0",
@@ -34,6 +36,7 @@
     "electron": "35.1.5",
     "eslint": "^9.24.0",
     "globals": "^16.0.0",
+    "icon-gen": "^5.0.0",
     "prettier": "^3.5.3",
     "prettier-plugin-vue": "^1.1.6",
     "sass": "^1.86.3",
@@ -51,5 +54,10 @@
     "puppeteer": "^24.6.1",
     "vue": "^3.5.13",
     "ytdl-core": "^4.11.5"
+  },
+  "build": {
+    "files": [
+      "music/**"
+    ]
   }
 }

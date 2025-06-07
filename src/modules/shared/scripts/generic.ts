@@ -5,8 +5,6 @@ import type { ISongMetadata } from '@/modules/backend/interfaces/ISongMetadata'
 
 export const setAllSongs = async () => {
   const musicStore = useMusicStore()
-
-  musicStore.path = await window.electron.ipcRenderer.invoke('get-path')
   const fileNames: string[] = await window.electron.ipcRenderer.invoke('get-song-file-names')
 
   let allSongs: ISong[] = []

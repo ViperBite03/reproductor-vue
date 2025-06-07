@@ -5,17 +5,12 @@ import { pipeline } from 'stream'
 import { promisify } from 'util'
 import type { IScrapData } from '@/modules/backend/interfaces/IScrapData'
 import type { ISongMetadata } from '@/modules/backend/interfaces/ISongMetadata'
+import { musicPath } from '@/modules/backend/scripts/getMusicPath'
 
 const streamPipeline = promisify(pipeline)
 
 export const downloadFile = async (url: string, fileName: string): Promise<string> => {
-  const musicFolderPath = path.join(process.cwd(), 'music')
-
-  if (!fs.existsSync(musicFolderPath)) {
-    fs.mkdirSync(musicFolderPath, { recursive: true })
-  }
-
-  const filePath = path.join(musicFolderPath, fileName + '.mp3')
+  const filePath = path.join(musicPath, fileName + '.mp3')
   const response = await fetch(url)
 
   await streamPipeline(response.body, fs.createWriteStream(filePath))
@@ -60,7 +55,7 @@ export const scrapSong = async (youtubeUrl: string): Promise<IScrapData> => {
 export const writeMetaData = async (metadata: ISongMetadata, fileName: string) => {
   const path = await process.cwd()
   const mp3 = fileName.includes('.mp3') ? '' : '.mp3'
-  const filePath = `${path}/music/${fileName}${mp3}`
+  const filePath = `${musicPath}/${fileName}${mp3}`
 
   const parsedMetadata = {
     title: metadata.title,
@@ -75,7 +70,7 @@ export const writeMetaData = async (metadata: ISongMetadata, fileName: string) =
 export const readMetaData = async (fileName: string): Promise<ISongMetadata> => {
   const path = await process.cwd()
   const mp3 = fileName.includes('.mp3') ? '' : '.mp3'
-  const filePath = `${path}/music/${fileName}${mp3}`
+  const filePath = `${musicPath}/${fileName}${mp3}`
 
   const result = await id3.Promise.read(filePath)
 
@@ -90,15 +85,12 @@ export const readMetaData = async (fileName: string): Promise<ISongMetadata> => 
 }
 
 export const getSongFileNames = async () => {
-  const path = await process.cwd()
-  const directoryPath = `${path}/music/`
-
-  return await fs.readdirSync(directoryPath)
+  return await fs.readdirSync(musicPath)
 }
 
 export const deleteFile = async (fileName: string) => {
   const path = await process.cwd()
-  const songPath = `${path}/music/${fileName}`
+  const songPath = `${musicPath}/${fileName}`
 
   fs.unlink(songPath, (err) => {
     if (err) {
