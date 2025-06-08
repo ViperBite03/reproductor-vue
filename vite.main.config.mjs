@@ -5,7 +5,7 @@ import path, { dirname } from 'path'
 export default defineConfig({
   build: {
     rollupOptions: {
-      external: ['@vreden/youtube_scraper', 'images-scraper', 'puppeteer'],
+      external: ['@vreden/youtube_scraper'],
     },
   },
   resolve: {
