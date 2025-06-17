@@ -144,7 +144,7 @@
       border-radius: var(--radius);
       width: 100%;
       aspect-ratio: 1;
-      object-fit: cover;
+      object-fit: contain;
 
       &:hover {
         transform: scale(0.9);
