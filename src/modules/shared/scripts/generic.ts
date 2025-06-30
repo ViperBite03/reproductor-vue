@@ -22,6 +22,7 @@ export const setAllSongs = async () => {
         date: new Date(metaSong.date),
         cover: metaSong.extraData.cover || '',
         video: metaSong.extraData.video,
+        curiosity: metaSong.extraData.curiosity || '',
         lyrics: '',
       }
 

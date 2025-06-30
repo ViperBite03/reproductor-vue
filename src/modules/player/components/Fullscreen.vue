@@ -8,6 +8,7 @@
   import Progress from './Progress.vue'
 
   import { Ref, ref } from 'vue'
+  import { ISongMetadata } from '../../backend/interfaces/ISongMetadata'
 
   const musicStore = useMusicStore()
   const curiosity: Ref<string> = ref('')
@@ -15,10 +16,40 @@
 
   const getCuriosity = async () => {
     loading.value = true
-    const prompt = `Explicame el origen y/o las curiosidades que existen de la cancion ${musicStore.activeSong.title} de ${musicStore.activeSong.artist} en un máximo de 10 líneas y de forma dínamica de leer y dividida en párrafos. Lo quiero estructurado, pon cada párrafo dentro de una etiqueta <p> y sin título. Usa el español hablado en España.`
+
+    if (musicStore.activeSong.curiosity) {
+      curiosity.value = musicStore.activeSong.curiosity
+      loading.value = false
+
+      return
+    }
+
+    const prompt = `Explicame el origen y/o las curiosidades que existen de la cancion ${musicStore.activeSong.title} de ${musicStore.activeSong.artist} en un máximo de 4 líneas y de forma dínamica de leer y dividida en párrafos. Lo quiero estructurado, pon cada párrafo dentro de una etiqueta <p> y sin título. Usa el español hablado en España.`
     const result = await queryChatgpt(prompt)
 
     curiosity.value = result
+
+    if (!curiosity.value) {
+      curiosity.value = 'No se encontraron curiosidades para esta canción.'
+    }
+
+    const metadata: ISongMetadata = {
+      title: musicStore.activeSong.title,
+      artist: musicStore.activeSong.artist,
+      date: new Date(musicStore.activeSong.date).toISOString(),
+      extraData: {
+        tags: [...musicStore.activeSong.tags],
+        cover: musicStore.activeSong.cover,
+        video: musicStore.activeSong.video,
+        curiosity: curiosity.value,
+        lyrics: musicStore.activeSong.lyrics,
+      },
+    }
+
+    console.log('Writing metadata:', metadata)
+
+    await window.electron.ipcRenderer.invoke('write-metadata', metadata, musicStore.activeSong.fileName)
+
     loading.value = false
   }
 

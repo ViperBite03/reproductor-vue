@@ -6,5 +6,7 @@ export type ISongMetadata = {
     tags: string[]
     cover: string
     video?: string
+    curiosity?: string
+    lyrics?: string
   }
 }

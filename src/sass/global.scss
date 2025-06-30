@@ -22,9 +22,10 @@ input {
   transition: 0.3s ease;
   border: 1px solid var(--colorPrimary);
   padding: 10px;
-  border-radius: 50px;
+  border-radius: var(--radius);
   background-color: transparent;
   outline: none;
+  background-color: rgba(0, 0, 0, 0.5);
 
   &::placeholder {
     opacity: 0.5;
@@ -55,15 +56,14 @@ input {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 14px;
+  text-align: center;
 
-  opacity: 0.5;
-  transform: scale(0.9);
-  filter: grayscale(1);
+  opacity: 0.3;
 
   &.active {
     opacity: 1;
     transform: scale(1);
-    filter: grayscale(0);
   }
 
   &:hover {

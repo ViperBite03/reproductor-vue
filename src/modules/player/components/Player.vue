@@ -21,7 +21,7 @@
     padding: 25px;
 
     background-color: var(--colorSecondary);
-    border-radius: var(--maxRadius);
+    border-radius: var(--radius);
 
     display: flex;
     flex-direction: column;

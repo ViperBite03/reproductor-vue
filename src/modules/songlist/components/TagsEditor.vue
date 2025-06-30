@@ -6,6 +6,10 @@
   import { setColor } from '@/modules/shared/scripts/generic'
 
   const musicStore = useMusicStore()
+
+  const handleTagUpdate = (ev, tagName: string) => {
+    player.updateTag(tagName, ev.target.value)
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -16,7 +20,7 @@
 
     .tag-editor-list {
       display: flex;
-      gap: 20px;
+      gap: 10px;
       flex-direction: column;
 
       .row {
@@ -42,9 +46,9 @@
         <div class="g-tag active" :style="{ 'background-color': tag.color, color: setColor(tag.color) }">
           {{ tag.name }}
         </div>
-
+        <input type="color" @input="(ev) => handleTagUpdate(ev, tag.name)" />
         <button @click="() => player.removeTag(tag.name)">
-          <Svg name="Trash" fill="transparent" stroke="var(--colorText)"></Svg>
+          <Svg name="Trash" fill="transparent" stroke="var(--colorText)" width="20" height="20"></Svg>
         </button>
       </div>
     </div>

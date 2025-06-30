@@ -114,9 +114,13 @@
       padding-bottom: 20px;
       padding-top: 10px;
 
+      &.row {
+        flex-direction: row;
+      }
+
       .tag-list {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         gap: 10px;
         padding-bottom: 20px;
 
@@ -161,10 +165,10 @@
   <div id="add-song">
     <h2 class="g-title">ADD SONG</h2>
 
-    <div class="section">
+    <div class="section row">
       <input type="text" v-model="youtubeURL" placeholder="youtube url" />
       <button @click="getMetadataFromYT">
-        {{ loadingMetaData ? 'Sacando metadatos...' : 'Obtener metadatos' }}
+        {{ loadingMetaData ? '...' : 'Metadatos' }}
       </button>
     </div>
 

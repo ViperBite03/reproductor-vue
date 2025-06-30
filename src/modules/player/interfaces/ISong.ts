@@ -9,6 +9,7 @@ export interface ISong {
   lyrics: string
   date: Date
   video: string
+  curiosity: string
 }
 
 export interface IActiveSong extends ISong {

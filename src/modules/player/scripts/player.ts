@@ -135,6 +135,7 @@ export const player = {
           lyrics: song.lyrics,
           date: song.date,
           video: song.video,
+          curiosity: song.curiosity,
           howl,
         }
 
@@ -270,6 +271,17 @@ export const player = {
     color = ''
 
     return ''
+  },
+  updateTag(tagName: string, newColor: string) {
+    const tags: ITag[] = JSON.parse(window.localStorage.getItem('tags'))
+    const tagIndex: number = tags.findIndex((tag: ITag) => tag.name === tagName)
+
+    if (tagIndex === -1) return
+
+    tags[tagIndex].color = newColor
+
+    getMusicStore().tags = tags
+    window.localStorage.setItem('tags', JSON.stringify(tags))
   },
   removeTag(tagNameToRemove: string) {
     const tags: ITag[] = JSON.parse(window.localStorage.getItem('tags'))

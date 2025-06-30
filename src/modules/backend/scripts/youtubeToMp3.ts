@@ -53,7 +53,6 @@ export const scrapSong = async (youtubeUrl: string): Promise<IScrapData> => {
 }
 
 export const writeMetaData = async (metadata: ISongMetadata, fileName: string) => {
-  const path = await process.cwd()
   const mp3 = fileName.includes('.mp3') ? '' : '.mp3'
   const filePath = `${musicPath}/${fileName}${mp3}`
 
@@ -68,7 +67,6 @@ export const writeMetaData = async (metadata: ISongMetadata, fileName: string) =
 }
 
 export const readMetaData = async (fileName: string): Promise<ISongMetadata> => {
-  const path = await process.cwd()
   const mp3 = fileName.includes('.mp3') ? '' : '.mp3'
   const filePath = `${musicPath}/${fileName}${mp3}`
 
@@ -89,7 +87,6 @@ export const getSongFileNames = async () => {
 }
 
 export const deleteFile = async (fileName: string) => {
-  const path = await process.cwd()
   const songPath = `${musicPath}/${fileName}`
 
   fs.unlink(songPath, (err) => {
