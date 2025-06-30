@@ -31,8 +31,8 @@
 
     const { title, artist } = cleanYouTubeTitle(scrapResult.youtubeTitle, scrapResult.artist)
 
-    songTitle.value = title
-    songArtist.value = artist
+    songTitle.value = title.replace(/[\\\/:*?"<>|]/g, '')
+    songArtist.value = artist.replace(/[\\\/:*?"<>|]/g, '')
 
     const googleSearch = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(`${artist}+${title}`)}&searchType=image&key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_GOOGLE_CX}`
     const imagesResult = await (await fetch(googleSearch)).json()

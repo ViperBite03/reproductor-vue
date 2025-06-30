@@ -4,11 +4,10 @@
   import Svg from '@/modules/shared/components/Svg.vue'
   import Progress from './Progress.vue'
   import Volume from './Volume.vue'
+
   import Fullscreen from './Fullscreen.vue'
-  import { ref } from 'vue'
 
   const musicStore = useMusicStore()
-  const isFullscreen = ref(false)
 
   const togglePlay = () => {
     musicStore.isPaused ? player.resume() : player.pause()
@@ -164,7 +163,7 @@
     <div
       class="cover g-shadow"
       :style="{ 'background-image': `url('${musicStore.activeSong.cover}')` }"
-      @click="isFullscreen = true"
+      @click="musicStore.isFullscreen = true"
     >
       <div class="details">
         <div class="title">{{ musicStore.activeSong.title }}</div>
@@ -211,6 +210,6 @@
       </button>
     </div>
 
-    <Fullscreen v-if="isFullscreen" @closeFullscreen="isFullscreen = $event"></Fullscreen>
+    <Fullscreen v-if="musicStore.isFullscreen"></Fullscreen>
   </div>
 </template>

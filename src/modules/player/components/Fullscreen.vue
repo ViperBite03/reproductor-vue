@@ -7,7 +7,7 @@
   import Volume from './Volume.vue'
   import Progress from './Progress.vue'
 
-  import { Ref, ref, defineEmits } from 'vue'
+  import { Ref, ref } from 'vue'
 
   const musicStore = useMusicStore()
   const curiosity: Ref<string> = ref('')
@@ -29,7 +29,7 @@
   const emit = defineEmits(['closeFullscreen'])
 
   const closeFullscreen = () => {
-    emit('closeFullscreen', false)
+    musicStore.isFullscreen = false
   }
 </script>
 
@@ -137,17 +137,17 @@
 
     <div class="info">
       <div class="actions">
-        <button class="curiosity">{{ loading ? 'Loading...' : 'Generate curiosity' }}</button>
+        <button class="curiosity" @click="getCuriosity">{{ loading ? 'Loading...' : 'Generate curiosity' }}</button>
         <button class="lyrics">Lyrics</button>
       </div>
-      <!--<div class="curiosity" v-html="curiosity"></div>-->
-      <div class="curiosity">
+      <div class="curiosity"><p v-html="curiosity"></p></div>
+      <!--<div class="curiosity">
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis aliquid quia, alias officiis eum porro
           reprehenderit fuga eius dolore repudiandae, sint similique placeat pariatur? Neque iure dolor sit! Dicta,
           cumque!
         </p>
-      </div>
+      </div>-->
     </div>
 
     <div class="player">

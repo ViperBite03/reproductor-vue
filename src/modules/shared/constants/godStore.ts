@@ -30,6 +30,7 @@ export const useMusicStore = defineStore('music', {
     loop: false,
     shuffle: false,
     editingSong: null as ISong,
+    isFullscreen: false,
 
     orderBy: '',
     filterBy: '',

@@ -1,9 +1,11 @@
 <script setup lang="ts">
-  import { ref, watch, Ref } from 'vue'
+  import { ref, watchEffect, Ref } from 'vue'
   import { useMusicStore } from '@/modules/shared/constants/godStore'
   import { player } from '@/modules/player/scripts/player'
 
   const musicStore = useMusicStore()
+
+  const HTMLProgressBar = ref(null)
 
   const mousePositionX: Ref<number> = ref(0)
   const totalDurationFormatted: Ref<string> = ref('0:00')
@@ -14,9 +16,7 @@
   let flag: boolean = false
 
   const progressChange = () => {
-    const HTMLProgressBar = document.querySelector('.progress-bar')
-
-    const { left, width } = HTMLProgressBar.getBoundingClientRect()
+    const { left, width } = HTMLProgressBar.value.getBoundingClientRect()
 
     const newProgress: number = ((mousePositionX.value - left) * 100) / width
     const newSec: number = (newProgress * musicStore.activeSong.howl.duration()) / 100
@@ -59,14 +59,14 @@
     if (musicStore.activeSong.howl.seek() < songOffset) flag = false
   }, 100)
 
-  watch(
-    () => musicStore.activeSong.howl,
-    (howl) => {
-      if (!howl) return
+  watchEffect(() => {
+    const howl = musicStore.activeSong.howl
+    const _ = musicStore.isFullscreen // 👈 solo para que sea reactivo
 
-      totalDurationFormatted.value = formatToDuration(~~howl.duration())
-    }
-  )
+    if (!howl) return
+
+    totalDurationFormatted.value = formatToDuration(~~howl.duration())
+  })
 </script>
 
 <style lang="scss" scoped>
@@ -132,6 +132,7 @@
 
     <div
       class="progress-bar"
+      ref="HTMLProgressBar"
       @mouseup="() => (holding = false)"
       @mouseleave="() => (holding = false)"
       @mousedown="() => (holding = true)"
