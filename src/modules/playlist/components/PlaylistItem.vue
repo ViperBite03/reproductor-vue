@@ -8,7 +8,7 @@
     //background-image: url('https://i.scdn.co/image/ab67616d00001e022cf9106556ed024ae6752608');
     height: 100%;
     aspect-ratio: 1;
-    border-radius: var(--maxRadius);
+    border-radius: var(--radius);
 
     .details {
       position: absolute;
@@ -17,7 +17,7 @@
       padding: 10px 0;
 
       width: calc(100% - 20px);
-      border-radius: var(--maxRadius);
+      border-radius: var(--radius);
       bottom: 10px;
       left: 10px;
       background-color: rgba(0, 0, 0, 0.5);

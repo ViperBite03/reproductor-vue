@@ -40,35 +40,9 @@
       gap: 10px;
     }
 
-    .can-active {
-      background-color: unset;
-      border: none;
-      padding: 0;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      gap: 3px;
-
-      .under-bar {
-        height: 3px;
-        width: 0;
-        background-color: var(--colorText);
-        border-radius: var(--maxRadius);
-        transition: 0.3s;
-      }
-
-      &.activeX {
-        .under-bar {
-          width: 10px;
-        }
-      }
-    }
-
     .cover {
       overflow: hidden;
-      border-radius: var(--maxRadius);
+      border-radius: var(--radius);
       width: 100%;
       aspect-ratio: 1;
       background-repeat: no-repeat;
@@ -115,37 +89,11 @@
         aspect-ratio: 1;
       }
 
-      .can-active {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        gap: 3px;
-
-        .under-bar {
-          height: 3px;
-          width: 0;
-          background-color: var(--colorText);
-          border-radius: var(--maxRadius);
-          transition: 0.3s;
-        }
-
-        &.active-underbar {
-          .under-bar {
-            width: 10px;
-          }
-        }
-      }
-
       button {
         padding: 0;
         background-color: unset;
         border: none;
         border-radius: 100%;
-
-        &.activeX {
-          border: 1px solid var(--colorPrimary);
-        }
       }
     }
   }
@@ -155,7 +103,6 @@
   <div id="player">
     <!--<button class="can-active">
       <Svg name="DJ" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
-      <div class="under-bar"></div>
     </button>-->
 
     <Volume></Volume>
@@ -174,12 +121,11 @@
     <Progress></Progress>
 
     <div class="player-buttons">
-      <button @click="player.updateSlowed()" :class="{ 'active-underbar': musicStore.rate < 1 }" class="can-active">
+      <button @click="player.updateSlowed()" :class="{ active: musicStore.rate < 1 }">
         <Svg name="Metronome" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
-        <div class="under-bar"></div>
       </button>
 
-      <button class="active-button" :class="{ activeX: musicStore.shuffle }" @click="player.updateShuffle">
+      <button :class="{ active: musicStore.shuffle }" @click="player.updateShuffle">
         <Svg name="Shuffle" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
       </button>
 
@@ -200,13 +146,12 @@
         <Svg name="Forward" fill="transparent" stroke="var(--colorText)"></Svg>
       </button>
 
-      <button class="active-button" :class="{ activeX: musicStore.loop }" @click="player.updateLoop">
+      <button :class="{ active: musicStore.loop }" @click="player.updateLoop">
         <Svg name="Loop" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
       </button>
 
-      <button @click="player.updateNightcore" :class="{ 'active-underbar': musicStore.rate > 1 }" class="can-active">
+      <button @click="player.updateNightcore" :class="{ active: musicStore.rate > 1 }">
         <Svg name="Groove" height="20" width="20" stroke="var(--colorText)"></Svg>
-        <div class="under-bar"></div>
       </button>
     </div>
 

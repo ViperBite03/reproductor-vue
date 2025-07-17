@@ -4,11 +4,11 @@
   import { queryChatgpt } from '@/modules/shared/scripts/chatgpt'
 
   import Svg from '@/modules/shared/components/Svg.vue'
-  import Volume from './Volume.vue'
-  import Progress from './Progress.vue'
+  import Volume from '@/modules/player/components/Volume.vue'
+  import Progress from '@/modules/player/components/Progress.vue'
 
-  import { Ref, ref } from 'vue'
-  import { ISongMetadata } from '../../backend/interfaces/ISongMetadata'
+  import { onMounted, Ref, ref } from 'vue'
+  import { ISongMetadata } from '@/modules/backend/interfaces/ISongMetadata'
 
   const musicStore = useMusicStore()
   const curiosity: Ref<string> = ref('')
@@ -62,6 +62,15 @@
   const closeFullscreen = () => {
     musicStore.isFullscreen = false
   }
+
+  onMounted(() => {
+    if (musicStore.activeSong.curiosity) {
+      curiosity.value = musicStore.activeSong.curiosity
+
+      console.log(curiosity.value)
+      loading.value = false
+    }
+  })
 </script>
 
 <style lang="scss" scoped>
@@ -100,14 +109,10 @@
     }
 
     .cover {
-      overflow: hidden;
-      border-radius: var(--maxRadius);
-      display: flex;
-      justify-content: center;
-
-      img {
-        height: 100%;
-      }
+      width: 100%;
+      object-fit: cover;
+      border-radius: var(--radius);
+      height: 100%;
     }
 
     .info {
@@ -127,7 +132,7 @@
 
       .curiosity {
         p {
-          padding-bottom: 10px;
+          padding-bottom: 20px;
           font-size: 20px;
           text-align: justify;
         }
@@ -139,7 +144,7 @@
 
       margin: 10px 0;
       background-color: var(--colorSecondary);
-      border-radius: var(--maxRadius);
+      border-radius: var(--radius);
       padding: 20px;
 
       display: flex;
@@ -151,27 +156,39 @@
         display: flex;
         align-items: center;
         justify-content: center;
+
+        button {
+          background: none !important;
+          border: unset !important;
+        }
       }
     }
+  }
+
+  :deep(.volume-container) {
+    border: 2px solid red;
+    width: 250px;
   }
 </style>
 
 <template>
   <div class="fullscreen">
     <div class="panel1">
+      <div class="titles">
+        <div>{{ musicStore.activeSong.title }}</div>
+        <div>{{ musicStore.activeSong.artist }}</div>
+      </div>
       <button class="close" @click="closeFullscreen()">X</button>
     </div>
 
-    <div class="cover">
-      <img :src="musicStore.activeSong.cover" alt="cover" />
-    </div>
+    <img class="cover" :src="musicStore.activeSong.cover" alt="cover" />
 
     <div class="info">
       <div class="actions">
         <button class="curiosity" @click="getCuriosity">{{ loading ? 'Loading...' : 'Generate curiosity' }}</button>
         <button class="lyrics">Lyrics</button>
       </div>
-      <div class="curiosity"><p v-html="curiosity"></p></div>
+      <div class="curiosity" v-html="curiosity"></div>
       <!--<div class="curiosity">
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis aliquid quia, alias officiis eum porro
@@ -187,10 +204,9 @@
       <div class="player-buttons">
         <button @click="player.updateSlowed()" :class="{ 'active-underbar': musicStore.rate < 1 }" class="can-active">
           <Svg name="Metronome" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
-          <div class="under-bar"></div>
         </button>
 
-        <button class="active-button" :class="{ activeX: musicStore.shuffle }" @click="player.updateShuffle">
+        <button :class="{ active: musicStore.shuffle }" @click="player.updateShuffle">
           <Svg name="Shuffle" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
         </button>
 
@@ -211,17 +227,16 @@
           <Svg name="Forward" fill="transparent" stroke="var(--colorText)"></Svg>
         </button>
 
-        <button class="active-button" :class="{ activeX: musicStore.loop }" @click="player.updateLoop">
+        <button :class="{ active: musicStore.loop }" @click="player.updateLoop">
           <Svg name="Loop" height="20" width="20" stroke="var(--colorText)" fill="transparent"></Svg>
         </button>
 
         <button @click="player.updateNightcore" :class="{ 'active-underbar': musicStore.rate > 1 }" class="can-active">
           <Svg name="Groove" height="20" width="20" stroke="var(--colorText)"></Svg>
-          <div class="under-bar"></div>
         </button>
-
-        <Volume></Volume>
       </div>
+
+      <Volume></Volume>
     </div>
   </div>
 </template>
