@@ -101,6 +101,18 @@
       align-items: center;
       justify-content: flex-end;
 
+      .titles {
+        padding-top: 40px;
+        width: 100%;
+
+        font-size: 30px;
+
+        h2 {
+          font-size: 25px;
+          color: var(--colorPrimary);
+        }
+      }
+
       .close {
         background-color: transparent;
         font-size: 30px;
@@ -175,8 +187,8 @@
   <div class="fullscreen">
     <div class="panel1">
       <div class="titles">
-        <div>{{ musicStore.activeSong.title }}</div>
-        <div>{{ musicStore.activeSong.artist }}</div>
+        <h1>{{ musicStore.activeSong.title }}</h1>
+        <h2>{{ musicStore.activeSong.artist }}</h2>
       </div>
       <button class="close" @click="closeFullscreen()">X</button>
     </div>

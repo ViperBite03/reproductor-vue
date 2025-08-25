@@ -34,7 +34,10 @@ export const scrapSong = async (youtubeUrl: string): Promise<IScrapData> => {
   }
 
   try {
+    console.log('Scrapping...')
     const result = await ytmp3(youtubeUrl)
+
+    console.log(result)
 
     songData.youtubeURL = result.metadata.url
     songData.youtubeTitle = result.metadata.title

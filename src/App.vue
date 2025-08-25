@@ -26,6 +26,8 @@
 
   onMounted(async () => {
     musicStore.tags = JSON.parse(window.localStorage.getItem('tags') || '[]')
+    musicStore.tags = musicStore.tags.sort((a, b) => a.name.localeCompare(b.name))
+
     getSettings()
 
     await setAllSongs()

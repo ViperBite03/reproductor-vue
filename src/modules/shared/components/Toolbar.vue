@@ -145,7 +145,7 @@
       z-index: 3;
 
       .g-title {
-        font-size: 20px;
+        font-size: 25px;
       }
 
       .tag-list {
